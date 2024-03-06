@@ -1,13 +1,13 @@
 # Alkalmazásfejlesztés (VIAUMA09) házi feladat
 
 Alapadatok:
-- A csapat neve:
-- Csapattagok (név, neptun kód): aaa (abc123), bbb (def123), ccc (ghi123)
+- A csapat neve: SonsOfUncleBob
+- Csapattagok (név, neptun kód): Kósa György Máté (X1EICP), Trombitás Zalán (IU269G), Langer Ákos (YCREKO)
 - Leadáshoz videó URL:
 
 A videó későbbi evfolyamok számára bemutatható/felhasználható videó vágásra?
-- [x] Igen, névtelenül
-- [ ] Igen, szerzőket megnevezve
+- [ ] Igen, névtelenül
+- [x] Igen, szerzőket megnevezve
 - [ ] Nem
 
 Leadáshoz checklist:
