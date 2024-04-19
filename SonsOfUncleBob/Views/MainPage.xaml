@@ -4,6 +4,96 @@
              x:Class="SonsOfUncleBob.MainPage">
 
     <ScrollView>
+        <HorizontalStackLayout>
+
+            <StackLayout x:Name="House" Margin="20" Background="Aqua"
+                         Spacing="0" Padding="30">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+
+                    <!--<Label Text="Column 0, Row 0"
+                            WidthRequest="200" />
+                    <Label Grid.Column="1"
+                            Text="Column 1, Row 0" />
+                    <Label Grid.Row="1"
+                            Text="Column 0, Row 1" />
+                    <Label Grid.Column="1"
+                            Grid.Row="1"
+                            Text="Column 1, Row 1" />-->
+                    <!--<GraphicsView 
+                        x:Name="Canvas"                 
+                        HorizontalOptions="Fill"
+                        Drawable="{StaticResource MyDrawable}" 
+                        HeightRequest="100"           
+                        Grid.Row="1"/>-->
+                    <BoxView Grid.Row="0" Grid.Column="0"
+                        Color="LightSkyBlue" />
+                    <BoxView Grid.Row="1" Grid.Column="0"
+                        Color="LightSkyBlue" />
+                    <BoxView Grid.Row="1" Grid.Column="0"
+                           Color="LightSkyBlue" />
+                    <BoxView Grid.Row="1" Grid.Column="1"
+    Color="LightSkyBlue" />
+                    <Rectangle Grid.Column="1" Grid.Row="1"
+                            Fill="White"
+                            Stroke="Black"
+                            WidthRequest="40"
+                            HeightRequest="100" />
+                    <Rectangle Grid.Column="1" Grid.Row="2"
+                                Fill="White"
+                                Stroke="Black"
+                                WidthRequest="40"
+                                HeightRequest="50" />
+                    <Rectangle Grid.Column="2" Grid.Row="1"
+                                Fill="White"
+                                    Stroke="Black"
+                                WidthRequest="80"
+                                HeightRequest="40" />
+                    <Rectangle Grid.Column="2" Grid.Row="2"
+                                Fill="White"
+                                Stroke="Black"
+                                WidthRequest="80"
+                                HeightRequest="100" />
+
+                </Grid>
+
+                <Label
+                    Text="Hello, World!"
+                    SemanticProperties.HeadingLevel="Level1"
+                    FontSize="32"
+                    HorizontalOptions="Center" />
+                
+                
+                <Button
+                    x:Name="CounterBtn"
+                    Text="Click me"
+                    SemanticProperties.Hint="Counts the number of times you click"
+                    HorizontalOptions="Center" />
+                    <!--Clicked="OnCounterClicked"-->
+                    
+
+                <Rectangle Fill="White"
+                    Stroke="Black"
+                    WidthRequest="150"
+                    HeightRequest="50"
+                     HorizontalOptions="Start" />
+
+            </StackLayout>
+
+        </HorizontalStackLayout>
+    </ScrollView>
+
+    <!--
+        <ScrollView>
         <VerticalStackLayout
             Spacing="25"
             Padding="30,0"
@@ -34,8 +124,16 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="MyFirstButton"
+                Text="Click me"
+                SemanticProperties.Hint="Surprise"
+                Clicked="OnBidenCallBtn"
+                HorizontalOptions="Center" />
 
         </VerticalStackLayout>
     </ScrollView>
+        -->
 
 </ContentPage>
