@@ -19,7 +19,6 @@ namespace Server.Models
         public double DesiredHumidity { get; private set; }
         //Humidity time constant in seconds (typical value is a few hours)
         public double HumidityTimeConstant { get; }
-        public bool isReachedTheDesiredHumidity { get; private set; }
 
 
         public Bathroom(string name,

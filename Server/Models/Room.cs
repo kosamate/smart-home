@@ -19,6 +19,7 @@ namespace Server.Models
         public string Name { get; }
         public double Temperature { get; private set; }
         public double DesiredTemperature { get; private set; }
+        public bool Light {  get; private set; }
         //Thermal time constant in seconds (typical value is between 15 and 30 minutes)
         public double ThermalTimeConstant { get; }
         public TimeOnly LastAdjusted { get; protected set; }
@@ -78,6 +79,10 @@ namespace Server.Models
             DesiredTemperature = temperature;
         }
 
+        public void changeLight()
+        {
+            Light = !Light;
+        }
         //The outside temperature can be more or less than the inside, so the inside temperature can change up or down.
         //Now I decide this with the help of a random number generator.
         private void updateTemperatureBetweenInsensibility()
