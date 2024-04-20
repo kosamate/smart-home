@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    internal class MainModel
+    //Plus Point: Dependency Inversion with this base class
+    internal abstract class Home
     {
+        public abstract List<Room> Rooms { get; }
     }
 }
