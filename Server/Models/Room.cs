@@ -10,14 +10,20 @@ namespace Server.Models
     {
         protected const double defaultTemperature = 21.0;
         protected const double defaultThermalTimeConstant = 20.0;
+        private const double temperatureMax = 28.0;
+        private const double temperatureMin = 15.0;
+        private const double temperatureInsensibility = 0.5;
+        private const double temperatureChangeStep = 0.1;
+        protected static Helper helper = new Helper();
 
         public string Name { get; }
-        public double Temperature { get; set; }
-        public double DesiredTemperature { get; set; }
+        public double Temperature { get; private set; }
+        public double DesiredTemperature { get; private set; }
         //Thermal time constant in seconds (typical value is between 15 and 30 minutes)
         public double ThermalTimeConstant { get; }
-        public TimeOnly LastAdjusted { get; set; }
-        
+        public TimeOnly LastAdjusted { get; protected set; }
+
+        public bool isReachedTheDesiredTemperature { get; private set; }
 
         public Room(string name,
                     double temperature = defaultTemperature,
@@ -25,9 +31,11 @@ namespace Server.Models
                     double timeConstant = defaultThermalTimeConstant)
         {
             this.Name = name;
-            if (temperature < -20.0 || temperature > 45.0)
-                temperature = defaultTemperature;
-            if (desiredTemperature < 15.0 || desiredTemperature > 28.0)
+            if (temperature < temperatureMin)
+                temperature = temperatureMin;
+            else if (temperature > temperatureMax)
+                temperature = temperatureMax;
+            if (desiredTemperature < temperatureMin || desiredTemperature > temperatureMax)
                 desiredTemperature = defaultTemperature;
             if (timeConstant <= 0.0)
                 timeConstant = defaultThermalTimeConstant;
@@ -35,39 +43,58 @@ namespace Server.Models
             this.DesiredTemperature = desiredTemperature;
             this.ThermalTimeConstant = timeConstant;
             this.LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
+            if (temperature <= (desiredTemperature + 0.01) && temperature >= (desiredTemperature - 0.01))
+                isReachedTheDesiredTemperature = true;
+            else
+                isReachedTheDesiredTemperature = false;
         }
 
         public void updateTemperature()
         {
-            if (Temperature == DesiredTemperature)
+            if (Temperature <= (DesiredTemperature + temperatureInsensibility)
+                && Temperature >= (DesiredTemperature - temperatureInsensibility)
+                && isReachedTheDesiredTemperature)
+            {
+                updateTemperatureBetweenInsensibility();
                 return;
+            }
             var timeNow = TimeOnly.FromDateTime(DateTime.Now);
             var timeDifference = timeNow - LastAdjusted;
-            double differenceInMinutes = calculateDifferenceInMinutes(timeDifference);
-            double ratio = differenceInMinutes / (5 * ThermalTimeConstant);
-            if (ratio > 1)
-                ratio = 1;
-            Temperature = Temperature + ratio * (DesiredTemperature - Temperature);
+            double differenceInSeconds = helper.calculateDifferenceInSeconds(timeDifference);
+            double ratio = helper.calculateRatio(differenceInSeconds, this.ThermalTimeConstant);
+            double disturbance = helper.getRandomDisturbance();
+            Temperature += (ratio * (DesiredTemperature - Temperature) + disturbance);
+            if (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01))
+                isReachedTheDesiredTemperature = true;
         }
 
         public void updateDesiredTemperature(double temperature)
         {
             LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
-            if (temperature <= 15.0 || temperature > 28.0)
-                temperature = defaultTemperature;
+            if (temperature < temperatureMin)
+                temperature = temperatureMin;
+            else if (temperature > temperatureMax)
+                temperature = temperatureMax;
             DesiredTemperature = temperature;
         }
 
-        private float calculateDifferenceInMinutes(TimeSpan difference)
+        //The outside temperature can be more or less than the inside, so the inside temperature can change up or down.
+        //Now I decide this with the help of a random number generator.
+        private void updateTemperatureBetweenInsensibility()
         {
-            float hoursDiff = (float)difference.TotalHours;
-            float minutesDiff = (float)difference.TotalMinutes;
-            float secondsDiff = (float)difference.TotalSeconds;
-            float totalDiffMinutes = hoursDiff * 60 + minutesDiff + secondsDiff / 60;
-            return totalDiffMinutes;
+            if (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01))
+            {
+                double sign = helper.getRandomSign();
+                Temperature += (sign * temperatureChangeStep);
+            }
+            else
+            {
+                if (Temperature > DesiredTemperature)
+                    Temperature += temperatureChangeStep;
+                else
+                    Temperature -= temperatureChangeStep;
+            }
+
         }
-
-
-
     }
 }
