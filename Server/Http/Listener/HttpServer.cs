@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.IO;
+﻿using System.Text;
+using System.Text.Json;
 using System.Net;
-using System.Threading.Tasks;
 using Server.Http.DTO;
 using Server.Models;
 
@@ -15,12 +8,20 @@ namespace Server.Http.Listener
 {
     internal class HttpServer
     {
-        public static HouseDTO HouseDTO {  get; set; }
-        public static RealHouse RealHouse {  get; set; }
-        public static HttpListener Listener { get; set; }
-        public static readonly string Uri = "http://localhost:8000/house";
+        public HouseDTO? HouseDTO {  get; set; }
+        public RealHouse? RealHouse {  get; set; }
+        public HttpListener? Listener { get; set; }
+        public readonly string Uri = "http://localhost:8000/house/";
 
-        public static async Task HandlerMethod(HttpListenerContext context)
+        public HttpServer()
+        {
+            this.HouseDTO = new HouseDTO();
+            this.RealHouse = new RealHouse();
+            this.Listener = new HttpListener();
+            Listener.Prefixes.Add(Uri);
+        }
+
+        public async Task HandlerMethod(HttpListenerContext context)
         {
             HttpListenerRequest req = context.Request;
             HttpListenerResponse resp = context.Response;
@@ -32,25 +33,38 @@ namespace Server.Http.Listener
                 await HandleHouseGet(req, resp);
         }
 
-        private static async Task HandleHousePut(HttpListenerRequest req, HttpListenerResponse resp)
+        private async Task HandleHousePut(HttpListenerRequest req, HttpListenerResponse resp)
         {
             string reqcontent = await GetStringContent(req);
 
-            JObject json = JObject.Parse(reqcontent);
-            houseDTO = json.ToObject<House>();
-
-
-            await BuildResponse(resp, req.ContentEncoding, "Updated the desired values in the server.");
+            HouseDTO? houseDTO= JsonSerializer.Deserialize<HouseDTO>(reqcontent);
+            this.HouseDTO = houseDTO;
+            if (this.RealHouse != null && this.HouseDTO != null)
+            {
+                this.RealHouse.updateDesiredValues(this.HouseDTO);
+                await BuildResponse(resp, req.ContentEncoding, "Updated the desired values in the server.");
+            }
+            else
+                return;
+            
         }
 
-        private static async Task HandleHouseGet(HttpListenerRequest req, HttpListenerResponse resp)
+        private async Task HandleHouseGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
-            string jsonString = JsonConvert.SerializeObject(houseDTO);
 
-            await BuildResponse(resp, req.ContentEncoding, jsonString);
+            if (this.HouseDTO != null && this.RealHouse != null)
+            {
+                this.HouseDTO.updateMeasuredValues(this.RealHouse);
+                string jsonString = JsonSerializer.Serialize(HouseDTO);
+                await BuildResponse(resp, req.ContentEncoding, jsonString);
+
+            }
+            else
+                return;
+            
         }
 
-        private static async Task<string> GetStringContent(HttpListenerRequest req)
+        private async Task<string> GetStringContent(HttpListenerRequest req)
         {
             string result = "";
             using (var bodyStream = req.InputStream)
@@ -64,7 +78,7 @@ namespace Server.Http.Listener
             return result;
         }
 
-        private static async Task BuildResponse(HttpListenerResponse resp, Encoding encoding, string content)
+        private async Task BuildResponse(HttpListenerResponse resp, Encoding encoding, string content)
         {
             resp.StatusCode = 200;
             byte[] buffer = encoding.GetBytes(content);

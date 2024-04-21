@@ -14,6 +14,7 @@ namespace Server.Models
 
         public RealHouse()
         {
+            this.Rooms = new List<RealRoom>();
             foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
             {
                 this.Rooms.Add(new RealRoom(roomName));

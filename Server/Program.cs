@@ -1,38 +1,29 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Server.Models;
-using Server.Http.DTO;
-using Server.Http.Listener;
+﻿using Server.Http.Listener;
 
 namespace HttpExample.Server
 {
     class Program
     {
-         private static HttpServer server = new HttpServer();
+        private static HttpServer? server;
 
         static async Task Main()
         {
-            server = new HouseDTO();
-            server.RealHouse = new RealHouse();
-            server.Listener = new HttpListener();
+           
+            server = new HttpServer();
 
-            listener.Prefixes.Add(Uri);
+            if (server.Listener != null)
+                server.Listener.Start();
+            else
+                return;
 
-            listener.Start();
             Console.WriteLine($"Listening...");
 
-            while (listener.IsListening)
+            while (server.Listener.IsListening)
             {
-                var context = await listener.GetContextAsync();
+                var context = await server.Listener.GetContextAsync();
                 try
                 {
-                    await HttpServer.HandlerMethod(context);
+                    await server.HandlerMethod(context);
                 }
                 catch (Exception ex)
                 {
@@ -41,14 +32,9 @@ namespace HttpExample.Server
 
             }
 
-            listener.Close();
+            server.Listener.Close();
             Console.WriteLine("Stopped listening");
             Console.ReadKey();
         }
-
-
-        
-
-
     }
 }

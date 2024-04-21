@@ -13,7 +13,7 @@ namespace Server.Http.DTO
         public double DesiredTemperature { get; set; }
         public bool Light { get; set; }
 
-        public RoomDTO(string name, double temperature, double desiredTemperature, bool light)
+        public RoomDTO(string name, double temperature = 24.0, double desiredTemperature = 24.0, bool light=true)
         {
             Name = name;
             Temperature = temperature;

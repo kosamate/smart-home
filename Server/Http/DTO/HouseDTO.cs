@@ -1,9 +1,4 @@
 ﻿using Server.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Server.Http.DTO
 {
@@ -12,14 +7,12 @@ namespace Server.Http.DTO
         public List<RoomDTO> Rooms { get; set; }
         public BathroomDTO Bathroom { get; set; }
 
-        public void addRoom(RoomDTO room)
+        public HouseDTO()
         {
-            Rooms.Add(room);
-        }
-
-        public void addBathRoom(BathroomDTO bathroom)
-        {
-            Bathroom = bathroom;
+            this.Rooms = new List<RoomDTO>();
+            foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
+                this.Rooms.Add(new RoomDTO(roomName));
+            this.Bathroom = new BathroomDTO("Bathroom");
         }
 
         public void updateMeasuredValues(RealHouse realHouse)
