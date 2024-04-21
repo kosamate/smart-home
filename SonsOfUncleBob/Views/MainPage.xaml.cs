@@ -1,8 +1,13 @@
-﻿namespace SonsOfUncleBob
+﻿
+
+namespace SonsOfUncleBob
 {
+
+   
     public partial class MainPage : ContentPage
     {
         int count = 0;
+        bool ButtonPressed = false;
 
         public MainPage()
         {
@@ -19,6 +24,12 @@
                 CounterBtn.Text = $"Clicked {count} times";
 
             SemanticScreenReader.Announce(CounterBtn.Text);
+        }
+
+
+        private void Btn_Pressed(System.Object sender, System.EventArgs e)
+        {
+                CounterBtn.Background = new SolidColorBrush(Colors.LightGreen);
         }
     }
 }

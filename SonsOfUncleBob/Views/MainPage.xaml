@@ -2,8 +2,92 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SonsOfUncleBob.MainPage">
+         <!--xmlns:drawable="clr-namespace:SonsOfUncleBob"-->
 
+    <!--<ContentPage.Resources>
+        <drawable:GraphicsDrawable x:Key="drawable" />
+    </ContentPage.Resources>-->
+    
+        
     <ScrollView>
+        <HorizontalStackLayout>
+            <Border Stroke="black" Background="LightBlue" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
+
+                <StackLayout x:Name="stacklayoutLeftOuter" Margin="10" Background="LightBlue" Spacing="5" Padding="10">
+
+                    <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+                    <Button Text="Room Information" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="Information"
+                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
+
+                    <Button Text="Historical Data" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="DataHistory"
+                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
+
+                    <StackLayout x:Name="stacklayoutLeftInner" Margin="10" Background="Black" Spacing="10" Padding="2">
+
+                        <Grid BackgroundColor="Black" RowSpacing="7" ColumnSpacing="8">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0" />
+                                <RowDefinition Height="200" />
+                                <RowDefinition Height="300"  />
+                                <RowDefinition Height="0" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width ="0" />
+                                <ColumnDefinition Width ="350" />
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width ="0" />
+                            </Grid.ColumnDefinitions>
+
+                            <BoxView Grid.Row="1" Grid.Column="1" Color="Green" />
+                            <Button Text="Bedroom" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
+                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
+                                    Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
+
+                            <BoxView Grid.Row="1" Grid.Column="2" Color="DeepSkyBlue" />
+                            <Button Text="Bathroom" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
+                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
+
+                            <BoxView Grid.Row="2" Grid.Column="1" Color="Teal" />
+                            <Button Text="Living Room" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
+                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="350"/>
+
+                            <BoxView Grid.Row="2" Grid.Column="2" Color="Purple" />
+                            <Button Text="Kitchen" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
+                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="180"/>
+
+                        </Grid>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+            <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
+
+                <StackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
+
+                    <Label Text="Historical Data/Room Information (To be dynamized)" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+                    <StackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
+                        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Bedroom</x:String>
+                                    <x:String>Bathroom</x:String>
+                                    <x:String>Living Room</x:String>
+                                    <x:String>Kitchen</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+        </HorizontalStackLayout>
+    </ScrollView>
+
+
+    <!--
+        <ScrollView>
         <VerticalStackLayout
             Spacing="25"
             Padding="30,0"
@@ -34,8 +118,36 @@
                 SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
+            
+            <Button
+                x:Name="MyFirstButton"
+                Text="Click me"
+                SemanticProperties.Hint="Surprise"
+                Clicked="OnBidenCallBtn"
+                HorizontalOptions="Center" />
+    
+            <Button Text="Click me!">
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+            <VisualState x:Name="Normal">
+                <VisualState.Setters>
+                    <Setter Property="Scale"
+                            Value="1" />
+                </VisualState.Setters>
+            </VisualState>
+            <VisualState x:Name="Pressed">
+                <VisualState.Setters>
+                    <Setter Property="Scale"
+                            Value="0.8" />
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+</Button>
+
 
         </VerticalStackLayout>
     </ScrollView>
-
+        -->
+    
 </ContentPage>
