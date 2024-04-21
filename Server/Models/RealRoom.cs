@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Models
 {
-    internal class Room
+    internal class RealRoom
     {
         protected const double defaultTemperature = 21.0;
         protected const double defaultThermalTimeConstant = 20.0;
@@ -19,14 +19,14 @@ namespace Server.Models
         public string Name { get; }
         public double Temperature { get; private set; }
         public double DesiredTemperature { get; private set; }
-        public bool Light {  get; private set; }
+        public bool Light {  get; set; }
         //Thermal time constant in seconds (typical value is between 15 and 30 minutes)
         public double ThermalTimeConstant { get; }
         public TimeOnly LastAdjusted { get; protected set; }
 
         public bool isReachedTheDesiredTemperature { get; private set; }
 
-        public Room(string name,
+        public RealRoom(string name,
                     double temperature = defaultTemperature,
                     double desiredTemperature = defaultTemperature,
                     double timeConstant = defaultThermalTimeConstant)
@@ -79,10 +79,6 @@ namespace Server.Models
             DesiredTemperature = temperature;
         }
 
-        public void changeLight()
-        {
-            Light = !Light;
-        }
         //The outside temperature can be more or less than the inside, so the inside temperature can change up or down.
         //Now I decide this with the help of a random number generator.
         private void updateTemperatureBetweenInsensibility()

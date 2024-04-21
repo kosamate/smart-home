@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    internal class Room
+    public class Room
     {
         //Plus Point: Builder design pattern
         public class RoomBuilder

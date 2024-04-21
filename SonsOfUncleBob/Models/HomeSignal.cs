@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    internal class HomeSignal
+    public class HomeSignal
 
     {
         public enum SignalCategory

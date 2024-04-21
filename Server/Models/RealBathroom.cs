@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.Models
 {
-    internal class Bathroom : Room
+    internal class RealBathroom : RealRoom
     {
         private const double defaultHumidity = 40.0;
         private const double defaultHumidityTimeConstant = 40.0;
@@ -21,7 +21,7 @@ namespace Server.Models
         public double HumidityTimeConstant { get; }
 
 
-        public Bathroom(string name,
+        public RealBathroom(string name,
                         double temperature = defaultTemperature,
                         double desiredTemperature = defaultTemperature,
                         double timeConstant = defaultThermalTimeConstant,
