@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    internal class BarcelonaHome : Home
+    public class BarcelonaHome : Home
     {
         private List<Room> rooms = new();
         public BarcelonaHome()
