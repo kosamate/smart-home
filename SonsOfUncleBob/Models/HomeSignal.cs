@@ -16,15 +16,19 @@ namespace SonsOfUncleBob.Models
         }
         public string Name { get; private set; }
         public string UnitOfMeasure { get; private set; }
-        public float Data { get; set; }
+        public Queue<float> Values { get; set; }
+        public float? DesiredValue { get; set; }
         public SignalCategory Category { get; private set;}
 
-        public HomeSignal(string name, string unitOfMeasure, float data, SignalCategory category)
+        public HomeSignal(string name, string unitOfMeasure, SignalCategory category)
         {
             Name = name;
             UnitOfMeasure = unitOfMeasure;
-            Data = data;
+            Values = new Queue<float>(capacity: PreviousValuesCount);
             Category = category;
+            DesiredValue = null;
         }
+
+        private const int PreviousValuesCount = 20;
     }
 }
