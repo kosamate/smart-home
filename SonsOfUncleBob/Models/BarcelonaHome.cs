@@ -15,18 +15,16 @@ namespace SonsOfUncleBob.Models
                 rooms.Add(
                     new Room.RoomBuilder()
                     .SetName(roomName)
-                    .AddSignal(new HomeSignal("Temperature", "C°", 20f, HomeSignal.SignalCategory.Temperature))
+                    .AddSignal(new HomeSignal("Temperature", "C°", HomeSignal.SignalCategory.Temperature))
                     .Build()
                     );
             rooms.Add(
                 new Room.RoomBuilder()
                     .SetName("Bathroom")
-                    .AddSignal(new HomeSignal("Temperature", "C°", 20f, HomeSignal.SignalCategory.Temperature))
-                    .AddSignal(new HomeSignal("Humidity", "%", 20f, HomeSignal.SignalCategory.Humidity))
+                    .AddSignal(new HomeSignal("Temperature", "C°", HomeSignal.SignalCategory.Temperature))
+                    .AddSignal(new HomeSignal("Humidity", "%", HomeSignal.SignalCategory.Humidity))
                     .Build()
                 );
-
-
         }
         public override List<Room> Rooms => rooms;
     }
