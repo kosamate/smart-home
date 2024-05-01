@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SonsOfUncleBob.MainPage">
-         <!--xmlns:drawable="clr-namespace:SonsOfUncleBob"-->
+             x:Class="SonsOfUncleBob.MainPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:drawable="clr-namespace:SonsOfUncleBob"
+             xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
 
-    <!--<ContentPage.Resources>
+    <ContentPage.Resources>
         <drawable:GraphicsDrawable x:Key="drawable" />
-    </ContentPage.Resources>-->
-    
-        
+
+    </ContentPage.Resources>
+
     <ScrollView>
         <HorizontalStackLayout>
             <Border Stroke="black" Background="LightBlue" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
@@ -16,6 +18,8 @@
                 <StackLayout x:Name="stacklayoutLeftOuter" Margin="10" Background="LightBlue" Spacing="5" Padding="10">
 
                     <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+                    <Switch IsToggled ="{Binding IsInformationPageActive}"/>
 
                     <Button Text="Room Information" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="Information"
                             HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
@@ -41,12 +45,12 @@
                             </Grid.ColumnDefinitions>
 
                             <BoxView Grid.Row="1" Grid.Column="1" Color="Green" />
-                            <Button Text="Bedroom" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
+                            <Button Text="Kitchen" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
                                     Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
 
                             <BoxView Grid.Row="1" Grid.Column="2" Color="DeepSkyBlue" />
-                            <Button Text="Bathroom" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
+                            <Button Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
 
                             <BoxView Grid.Row="2" Grid.Column="1" Color="Teal" />
@@ -64,11 +68,11 @@
 
             <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
 
-                <StackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
+                <VerticalStackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
                     <Label Text="Historical Data/Room Information (To be dynamized)" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-                    <StackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
+                    <VerticalStackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
                         <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
@@ -79,8 +83,18 @@
                                 </x:Array>
                             </Picker.ItemsSource>
                         </Picker>
-                    </StackLayout>
-                </StackLayout>
+                    </VerticalStackLayout>
+
+
+                    <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
+                    <Views:History IsVisible="{Binding !IsInformationPageActive}"/>
+
+                    <GraphicsView Drawable="{StaticResource drawable}"
+                      HeightRequest="300"
+                      WidthRequest="400" />
+
+
+                </VerticalStackLayout>
             </Border>
         </HorizontalStackLayout>
     </ScrollView>
@@ -149,5 +163,5 @@
         </VerticalStackLayout>
     </ScrollView>
         -->
-    
+
 </ContentPage>
