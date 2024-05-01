@@ -4,11 +4,12 @@
              x:Class="SonsOfUncleBob.MainPage"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:drawable="clr-namespace:SonsOfUncleBob"
+             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters"
              xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
 
     <ContentPage.Resources>
         <drawable:GraphicsDrawable x:Key="drawable" />
-
+        <Converters:NegateConverter x:Key ="NegateConverter"/>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -87,7 +88,7 @@
 
 
                     <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
-                    <Views:History IsVisible="{Binding !IsInformationPageActive}"/>
+                    <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
 
                     <GraphicsView Drawable="{StaticResource drawable}"
                       HeightRequest="300"
