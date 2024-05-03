@@ -20,13 +20,13 @@
 
                     <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-                    <Switch IsToggled ="{Binding IsInformationPageActive}"/>
-
-                    <Button Text="Room Information" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="Information"
-                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
-
-                    <Button Text="Historical Data" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="DataHistory"
-                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
+                    <HorizontalStackLayout HorizontalOptions="End">
+                        <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <AbsoluteLayout>
+                            <Switch IsToggled ="{Binding IsInformationPageActive}" HorizontalOptions="End" AbsoluteLayout.LayoutBounds="0.7,0,40,35"/>
+                        </AbsoluteLayout>
+                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                    </HorizontalStackLayout>
 
                     <StackLayout x:Name="stacklayoutLeftInner" Margin="10" Background="Black" Spacing="10" Padding="2">
 
@@ -46,7 +46,7 @@
                             </Grid.ColumnDefinitions>
 
                             <BoxView Grid.Row="1" Grid.Column="1" Color="Green" />
-                            <Button Text="Kitchen" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
+                            <Button Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
                                     Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
 
@@ -55,11 +55,11 @@
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
 
                             <BoxView Grid.Row="2" Grid.Column="1" Color="Teal" />
-                            <Button Text="Living Room" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
+                            <Button Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="350"/>
 
                             <BoxView Grid.Row="2" Grid.Column="2" Color="Purple" />
-                            <Button Text="Kitchen" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
+                            <Button Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
                                      HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="180"/>
 
                         </Grid>
@@ -71,10 +71,11 @@
 
                 <VerticalStackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
-                    <Label Text="Historical Data/Room Information (To be dynamized)" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+                    <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
+                    <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
 
                     <VerticalStackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
-                        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black">
+                        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding Rooms, Mode=OneWay}">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
                                     <x:String>Bedroom</x:String>
@@ -87,12 +88,11 @@
                     </VerticalStackLayout>
 
 
-                    <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
-                    <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
+                    
 
-                    <GraphicsView Drawable="{StaticResource drawable}"
+                    <!--<GraphicsView Drawable="{StaticResource drawable}"
                       HeightRequest="300"
-                      WidthRequest="400" />
+                      WidthRequest="400" />-->
 
 
                 </VerticalStackLayout>

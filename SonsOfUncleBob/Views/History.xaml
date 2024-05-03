@@ -3,9 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SonsOfUncleBob.Views.History">
     <VerticalStackLayout>
-        <Label 
-            Text="Historical data!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Label Text="Data History" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
     </VerticalStackLayout>
 </ContentView>
