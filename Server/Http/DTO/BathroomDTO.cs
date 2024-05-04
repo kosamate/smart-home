@@ -6,8 +6,8 @@ namespace Server.Http.DTO
         public double Humidity { get; set; }
         public double DesiredHumidity { get; set; }
 
-        public BathroomDTO(string name, double temperature = 24.0, double desiredTemperature=24.0, bool light=true,
-            double humidity=40.0, double desiredHumidity=40.0) : base(name, temperature, desiredTemperature, light)
+        public BathroomDTO(string name, double temperature, double desiredTemperature, bool light,
+            double humidity, double desiredHumidity) : base(name, temperature, desiredTemperature, light)
         {
             Humidity = humidity;
             DesiredHumidity = desiredHumidity;

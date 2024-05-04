@@ -8,17 +8,23 @@ namespace Server.Http.Listener
 {
     internal class HttpServer
     {
-        public HouseDTO? HouseDTO {  get; set; }
-        public RealHouse? RealHouse {  get; set; }
-        public HttpListener? Listener { get; set; }
-        public readonly string Uri = "http://localhost:8000/house/";
+        public HouseDTO HouseDTO {  get; set; }
+        public RealHouse RealHouse {  get; set; }
+        public HttpListener Listener { get; set; }
+
+        public static readonly string baseuri = "http://localhost:8000/";
+        public static readonly string room = "room/";
+        public static readonly string bathroom = "bathroom/";
+        public static readonly string roomUri = string.Concat(baseuri, room);
+        public static readonly string bathroomUri = string.Concat(baseuri, bathroom);
 
         public HttpServer()
         {
             this.HouseDTO = new HouseDTO();
             this.RealHouse = new RealHouse();
             this.Listener = new HttpListener();
-            Listener.Prefixes.Add(Uri);
+            Listener.Prefixes.Add(roomUri);
+            Listener.Prefixes.Add(bathroomUri);
         }
 
         public async Task HandlerMethod(HttpListenerContext context)
@@ -27,41 +33,70 @@ namespace Server.Http.Listener
             HttpListenerResponse resp = context.Response;
             Console.WriteLine($"URL: {req.Url} \t{req.HttpMethod}");
 
-            if (req.HttpMethod.Equals("PUT"))
-                await HandleHousePut(req, resp);
+            if (req.Url != null && req.Url.ToString().Equals(roomUri))
+            {
+                if (req.HttpMethod.Equals("PUT"))
+                    await HandleRoomPut(req, resp);
+                else
+                    await HandleRoomGet(req, resp);
+            }
             else
-                await HandleHouseGet(req, resp);
+            {
+                if (req.HttpMethod.Equals("PUT"))
+                    await HandleBathroomPut(req, resp);
+                else
+                    await HandleBathroomGet(req, resp);
+            }
         }
 
-        private async Task HandleHousePut(HttpListenerRequest req, HttpListenerResponse resp)
+        private async Task HandleRoomPut(HttpListenerRequest req, HttpListenerResponse resp)
         {
             string reqcontent = await GetStringContent(req);
 
-            HouseDTO? houseDTO= JsonSerializer.Deserialize<HouseDTO>(reqcontent);
-            this.HouseDTO = houseDTO;
-            if (this.RealHouse != null && this.HouseDTO != null)
-            {
-                this.RealHouse.updateDesiredValues(this.HouseDTO);
-                await BuildResponse(resp, req.ContentEncoding, "Updated the desired values in the server.");
-            }
-            else
-                return;
+            RoomDTO? roomDTO= JsonSerializer.Deserialize<RoomDTO>(reqcontent);
             
+            if (roomDTO != null)
+            {
+                this.HouseDTO.updateRoom(roomDTO);
+                this.RealHouse.updateDesiredValues(this.HouseDTO);
+                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {roomDTO.Name}.");
+            }
         }
 
-        private async Task HandleHouseGet(HttpListenerRequest req, HttpListenerResponse resp)
+        private async Task HandleRoomGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
+            this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
+                if (!(roomDTO is BathroomDTO))
+                { 
+                    string jsonString = JsonSerializer.Serialize(roomDTO);
+                    await BuildResponse(resp, req.ContentEncoding, jsonString);
+                }
+        }
 
-            if (this.HouseDTO != null && this.RealHouse != null)
-            {
-                this.HouseDTO.updateMeasuredValues(this.RealHouse);
-                string jsonString = JsonSerializer.Serialize(HouseDTO);
-                await BuildResponse(resp, req.ContentEncoding, jsonString);
+        private async Task HandleBathroomPut(HttpListenerRequest req, HttpListenerResponse resp)
+        {
+            string reqcontent = await GetStringContent(req);
 
-            }
-            else
-                return;
+            BathroomDTO? bathroomDTO = JsonSerializer.Deserialize<BathroomDTO>(reqcontent);
             
+            if (bathroomDTO != null)
+            {
+                this.HouseDTO.updateRoom(bathroomDTO);
+                this.RealHouse.updateDesiredValues(this.HouseDTO);
+                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {bathroomDTO.Name}.");
+            }
+        }
+
+        private async Task HandleBathroomGet(HttpListenerRequest req, HttpListenerResponse resp)
+        {
+            this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
+                if (roomDTO is BathroomDTO)
+                {
+                    string jsonString = JsonSerializer.Serialize(HouseDTO);
+                    await BuildResponse(resp, req.ContentEncoding, jsonString);
+                }
         }
 
         private async Task<string> GetStringContent(HttpListenerRequest req)
