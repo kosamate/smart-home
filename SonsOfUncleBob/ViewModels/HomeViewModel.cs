@@ -14,6 +14,20 @@ namespace SonsOfUncleBob.ViewModels
         public Home homeModel = new DummyBarcelonaHome();
         private Page page { get; set; }
 
+        public string selectedRoom;
+
+        public string SelectedRoom
+        {
+            get { return selectedRoom; }
+            set
+            {
+                if (selectedRoom != value)
+                {
+                    selectedRoom = value;
+                    Notify();
+                }
+            }
+        }
         public bool IsInformationPageActive {
             get { return page == Page.Information; }
             set {
@@ -55,5 +69,7 @@ namespace SonsOfUncleBob.ViewModels
     }
 
     public enum Page {Information, History}
+    public enum SelectedRoom { Kitchen, Bathroom, Bedroom, LivingRoom }
+
 
 }

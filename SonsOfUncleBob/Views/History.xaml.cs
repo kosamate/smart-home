@@ -8,4 +8,19 @@ public partial class History : ContentView
 	{
 		InitializeComponent();
 	}
+
+    private string _selectedRoom;
+    public string SelectedRoom
+    {
+        get { return _selectedRoom; }
+        set
+        {
+            if (_selectedRoom != value)
+            {
+                _selectedRoom = value;
+                OnPropertyChanged(nameof(SelectedRoom));
+            }
+        }
+    }
+
 }

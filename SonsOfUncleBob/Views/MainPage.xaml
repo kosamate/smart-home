@@ -21,11 +21,11 @@
                     <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
 
                     <HorizontalStackLayout HorizontalOptions="End">
-                        <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
                         <AbsoluteLayout>
                             <Switch IsToggled ="{Binding IsInformationPageActive}" HorizontalOptions="End" AbsoluteLayout.LayoutBounds="0.7,0,40,35"/>
                         </AbsoluteLayout>
-                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
                     </HorizontalStackLayout>
 
                     <StackLayout x:Name="stacklayoutLeftInner" Margin="10" Background="Black" Spacing="10" Padding="2">
@@ -45,22 +45,62 @@
                                 <ColumnDefinition Width ="0" />
                             </Grid.ColumnDefinitions>
 
-                            <BoxView Grid.Row="1" Grid.Column="1" Color="Green" />
+                            <!--Kitchen-->
                             <Button Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
                                     Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="1" Grid.Column="2" Color="DeepSkyBlue" />
+                            <!--Bathroom-->
                             <Button Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="2" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5" >
+                                    <Label Text="Light: " FontSize="Default" TextColor="White" />
+                                    <Label Text="{Binding BathRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White" />
+                                    <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="2" Grid.Column="1" Color="Teal" />
+                            <!--Livingroom-->
                             <Button Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="350"/>
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="1" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="2" Grid.Column="2" Color="Purple" />
+                            <!--Bedroom-->
                             <Button Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
                                      HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="180"/>
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="2" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
                         </Grid>
                     </StackLayout>
@@ -74,21 +114,6 @@
                     <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
                     <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
 
-                    <VerticalStackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
-                        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding Rooms, Mode=OneWay}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Bedroom</x:String>
-                                    <x:String>Bathroom</x:String>
-                                    <x:String>Living Room</x:String>
-                                    <x:String>Kitchen</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </VerticalStackLayout>
-
-
-                    
 
                     <!--<GraphicsView Drawable="{StaticResource drawable}"
                       HeightRequest="300"
@@ -99,70 +124,4 @@
             </Border>
         </HorizontalStackLayout>
     </ScrollView>
-
-
-    <!--
-        <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-            
-            <Button
-                x:Name="MyFirstButton"
-                Text="Click me"
-                SemanticProperties.Hint="Surprise"
-                Clicked="OnBidenCallBtn"
-                HorizontalOptions="Center" />
-    
-            <Button Text="Click me!">
-    <VisualStateManager.VisualStateGroups>
-        <VisualStateGroup x:Name="CommonStates">
-            <VisualState x:Name="Normal">
-                <VisualState.Setters>
-                    <Setter Property="Scale"
-                            Value="1" />
-                </VisualState.Setters>
-            </VisualState>
-            <VisualState x:Name="Pressed">
-                <VisualState.Setters>
-                    <Setter Property="Scale"
-                            Value="0.8" />
-                </VisualState.Setters>
-            </VisualState>
-        </VisualStateGroup>
-    </VisualStateManager.VisualStateGroups>
-</Button>
-
-
-        </VerticalStackLayout>
-    </ScrollView>
-        -->
-
 </ContentPage>
