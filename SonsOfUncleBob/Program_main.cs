@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob
 {
-    class Program
+    class Program_main
     {
         public static async Task Main()
         {
@@ -39,6 +39,15 @@ namespace SonsOfUncleBob
             Debug.WriteLine(res);
 
             bathroom = await client.GetBathroom();
+            Debug.WriteLine(bathroom);
+
+            res = await client.DeleteRooms();
+            Debug.WriteLine(res);
+
+            bathroom = await client.GetBathroom();
+            roomlist = await client.GetRoomsList();
+            foreach (RoomDTO room in roomlist)
+                Debug.WriteLine(room);
             Debug.WriteLine(bathroom);
 
         }   

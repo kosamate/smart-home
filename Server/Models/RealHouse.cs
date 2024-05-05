@@ -17,9 +17,9 @@ namespace Server.Models
             this.Rooms = new List<RealRoom>();
             foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
             {
-                this.Rooms.Add(new RealRoom(roomName, 24.0, LightState.Off, 21.0, 5.0));
+                this.Rooms.Add(new RealRoom(roomName, 24.0, LightState.Off, RoomDefaults.defaultDesiredTemperature, 5.0));
             }
-            this.Rooms.Add(new RealBathroom("Bathroom", 24.0, LightState.Off, 70.0, 21.0, 5.0, 40.0, 5.0));
+            this.Rooms.Add(new RealBathroom("Bathroom", 24.0, LightState.Off, 70.0, RoomDefaults.defaultDesiredTemperature, 5.0, BathroomDefaults.defaultDesiredHumidity, 5.0));
         }
 
         public void updateDesiredValues(HouseDTO houseDTO)

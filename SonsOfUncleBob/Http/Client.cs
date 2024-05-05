@@ -26,6 +26,13 @@ namespace SonsOfUncleBob.Http
             return result;
         }
 
+        public async Task<string> DeleteRooms()
+        {
+            var res = await sender.DeleteAsync(roomUri);
+            string stringres = await res.Content.ReadAsStringAsync();
+            return stringres;
+        }
+
         public async Task<string> PutRoom(RoomDTO roomDTO)
         {
             string jsonString = JsonSerializer.Serialize(roomDTO);

@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Net;
 using Server.Http.DTO;
 using Server.Models;
+using Server.Models.Supporters;
 
 namespace Server.Http.Listener
 {
@@ -39,8 +40,10 @@ namespace Server.Http.Listener
             {
                 if (req.HttpMethod.Equals("PUT"))
                     await HandleRoomPut(req, resp);
+                else if (req.HttpMethod.Equals("DELETE"))
+                    await HandleRoomDelete(req, resp);
                 else
-                    await HandleRoomGet(req, resp);
+                    await HandleRoomsGet(req, resp);
             }
             else
             {
@@ -65,7 +68,22 @@ namespace Server.Http.Listener
             }
         }
 
-        private async Task HandleRoomGet(HttpListenerRequest req, HttpListenerResponse resp)
+        private async Task HandleRoomDelete(HttpListenerRequest req, HttpListenerResponse resp)
+        {
+            foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
+            {
+                {
+                    roomDTO.DesiredTemperature = RoomDefaults.defaultDesiredTemperature;
+                    roomDTO.Light = LightState.Default;
+                    if (roomDTO is BathroomDTO)
+                        ((BathroomDTO)roomDTO).DesiredHumidity = BathroomDefaults.defaultDesiredHumidity;
+                }
+            }
+            this.RealHouse.updateDesiredValues(this.HouseDTO);
+            await BuildResponse(resp, req.ContentEncoding, "Updated the desired values to the defaults.\n");
+        }
+
+        private async Task HandleRoomsGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
             this.HouseDTO.updateMeasuredValues(this.RealHouse);
             List<RoomDTO> rooms = new List<RoomDTO>();
@@ -114,6 +132,8 @@ namespace Server.Http.Listener
             }
             return result;
         }
+
+
 
         private async Task BuildResponse(HttpListenerResponse resp, Encoding encoding, string content)
         {

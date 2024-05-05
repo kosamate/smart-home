@@ -20,7 +20,7 @@ namespace SonsOfUncleBob
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            Program.Main();
+            Program_main.Main();
 
             return builder.Build();
         }

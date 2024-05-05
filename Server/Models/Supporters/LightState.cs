@@ -10,5 +10,6 @@ namespace Server.Models.Supporters
     {
         public const bool Off = false;
         public const bool On = true;
+        public const bool Default = false;
     }
 }
