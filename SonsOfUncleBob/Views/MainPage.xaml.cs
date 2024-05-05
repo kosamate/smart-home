@@ -1,17 +1,28 @@
-﻿
+﻿using SonsOfUncleBob.ViewModels;
 
 namespace SonsOfUncleBob
 {
 
-   
+    public class GraphicsDrawable : IDrawable
+    {
+        public void Draw(ICanvas canvas, RectF dirtyRect)
+        {
+            // Drawing code goes here
+            canvas.FillColor = Colors.DarkBlue;
+            canvas.FillRectangle(10, 10, 100, 50);
+        }
+    }
     public partial class MainPage : ContentPage
     {
         int count = 0;
         bool ButtonPressed = false;
+        HomeViewModel viewModel = new();
 
         public MainPage()
         {
+            this.BindingContext = viewModel;
             InitializeComponent();
+
         }
 
         private void OnCounterClicked(object sender, EventArgs e)
