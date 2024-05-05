@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using SonsOfUncleBob.Models;
 using SonsOfUncleBob.ViewModels;
-using SonsOfUncleBob.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace SonsOfUncleBob.Database
@@ -17,7 +16,7 @@ namespace SonsOfUncleBob.Database
         public HistoryModel()
         {
             throw new NotImplementedException();
-            HttpDataProvider.Instance.DataReceived += DataReceived;
+            //HttpDataProvider.Instance.DataReceived += DataReceived;
         }
 
         public IEnumerable<KeyValuePair<DateTime, float>> GetSignalHistory(Models.Room room, string signalName, DateTime from, DateTime to)
