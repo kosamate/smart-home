@@ -13,7 +13,7 @@ namespace Server.Http.Listener
         public HttpListener Listener { get; set; }
 
         public static readonly string baseuri = "http://localhost:8000/";
-        public static readonly string room = "room/";
+        public static readonly string room = "rooms/";
         public static readonly string bathroom = "bathroom/";
         public static readonly string roomUri = string.Concat(baseuri, room);
         public static readonly string bathroomUri = string.Concat(baseuri, bathroom);
@@ -25,6 +25,8 @@ namespace Server.Http.Listener
             this.Listener = new HttpListener();
             Listener.Prefixes.Add(roomUri);
             Listener.Prefixes.Add(bathroomUri);
+            this.RealHouse.updateDesiredValues(this.HouseDTO);
+            this.HouseDTO.updateMeasuredValues(this.RealHouse);
         }
 
         public async Task HandlerMethod(HttpListenerContext context)
@@ -59,19 +61,19 @@ namespace Server.Http.Listener
             {
                 this.HouseDTO.updateRoom(roomDTO);
                 this.RealHouse.updateDesiredValues(this.HouseDTO);
-                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {roomDTO.Name}.");
+                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {roomDTO.Name}.\n");
             }
         }
 
         private async Task HandleRoomGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
             this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            List<RoomDTO> rooms = new List<RoomDTO>();
             foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
-                if (!(roomDTO is BathroomDTO))
-                { 
-                    string jsonString = JsonSerializer.Serialize(roomDTO);
-                    await BuildResponse(resp, req.ContentEncoding, jsonString);
-                }
+                if (!(roomDTO is BathroomDTO)) 
+                    rooms.Add(roomDTO);
+            string jsonString = JsonSerializer.Serialize(rooms);
+            await BuildResponse(resp, req.ContentEncoding, jsonString);
         }
 
         private async Task HandleBathroomPut(HttpListenerRequest req, HttpListenerResponse resp)
@@ -84,7 +86,7 @@ namespace Server.Http.Listener
             {
                 this.HouseDTO.updateRoom(bathroomDTO);
                 this.RealHouse.updateDesiredValues(this.HouseDTO);
-                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {bathroomDTO.Name}.");
+                await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {bathroomDTO.Name}.\n");
             }
         }
 
@@ -94,7 +96,7 @@ namespace Server.Http.Listener
             foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
                 if (roomDTO is BathroomDTO)
                 {
-                    string jsonString = JsonSerializer.Serialize(roomDTO);
+                    string jsonString = JsonSerializer.Serialize(roomDTO as BathroomDTO);
                     await BuildResponse(resp, req.ContentEncoding, jsonString);
                 }
         }
