@@ -1,22 +1,23 @@
-﻿using Server.Http.Listener;
+﻿using Server.Http.DTO;
+using Server.Http.Listener;
+using Server.Models;
+using Server.Models.Supporters;
+using System.Text.Json;
 
 namespace HttpExample.Server
 {
     class Program
     {
-        private static HttpServer? server;
-
         static async Task Main()
         {
-           
-            server = new HttpServer();
+            HttpServer server = new HttpServer();
 
             if (server.Listener != null)
                 server.Listener.Start();
             else
                 return;
 
-            Console.WriteLine($"Listening...");
+            Console.WriteLine("Listening...");
 
             while (server.Listener.IsListening)
             {
