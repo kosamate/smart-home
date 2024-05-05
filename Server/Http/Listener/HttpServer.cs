@@ -94,7 +94,7 @@ namespace Server.Http.Listener
             foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
                 if (roomDTO is BathroomDTO)
                 {
-                    string jsonString = JsonSerializer.Serialize(HouseDTO);
+                    string jsonString = JsonSerializer.Serialize(roomDTO);
                     await BuildResponse(resp, req.ContentEncoding, jsonString);
                 }
         }

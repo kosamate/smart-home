@@ -12,11 +12,6 @@ namespace HttpExample.Server
         {
             HttpServer server = new HttpServer();
 
-            string jsonString = JsonSerializer.Serialize(server.HouseDTO);
-            Console.WriteLine(jsonString);
-
-
-
             if (server.Listener != null)
                 server.Listener.Start();
             else
