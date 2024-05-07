@@ -1,14 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SonsOfUncleBob.MainPage">
-         <!--xmlns:drawable="clr-namespace:SonsOfUncleBob"-->
+             x:Class="SonsOfUncleBob.MainPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:drawable="clr-namespace:SonsOfUncleBob"
+             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters"
+             xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
 
-    <!--<ContentPage.Resources>
+    <ContentPage.Resources>
         <drawable:GraphicsDrawable x:Key="drawable" />
-    </ContentPage.Resources>-->
-    
-        
+        <Converters:NegateConverter x:Key ="NegateConverter"/>
+    </ContentPage.Resources>
+
     <ScrollView>
         <HorizontalStackLayout>
             <Border Stroke="black" Background="LightBlue" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
@@ -17,11 +20,13 @@
 
                     <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-                    <Button Text="Room Information" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="Information"
-                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
-
-                    <Button Text="Historical Data" Grid.Row="1" Grid.Column="2" BackgroundColor="DarkBlue" x:Name="DataHistory"
-                            HorizontalOptions="End" VerticalOptions="End" HeightRequest="40" WidthRequest="150" />
+                    <HorizontalStackLayout HorizontalOptions="End">
+                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <AbsoluteLayout>
+                            <Switch IsToggled ="{Binding IsInformationPageActive}" HorizontalOptions="End" AbsoluteLayout.LayoutBounds="0.7,0,40,35"/>
+                        </AbsoluteLayout>
+                        <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                    </HorizontalStackLayout>
 
                     <StackLayout x:Name="stacklayoutLeftInner" Margin="10" Background="Black" Spacing="10" Padding="2">
 
@@ -40,22 +45,62 @@
                                 <ColumnDefinition Width ="0" />
                             </Grid.ColumnDefinitions>
 
-                            <BoxView Grid.Row="1" Grid.Column="1" Color="Green" />
-                            <Button Text="Bedroom" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
+                            <!--Kitchen-->
+                            <Button Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
                                     Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="1" Grid.Column="2" Color="DeepSkyBlue" />
-                            <Button Text="Bathroom" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
+                            <!--Bathroom-->
+                            <Button Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="2" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5" >
+                                    <Label Text="Light: " FontSize="Default" TextColor="White" />
+                                    <Label Text="{Binding BathRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White" />
+                                    <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="2" Grid.Column="1" Color="Teal" />
-                            <Button Text="Living Room" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
+                            <!--Livingroom-->
+                            <Button Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="350"/>
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="1" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
-                            <BoxView Grid.Row="2" Grid.Column="2" Color="Purple" />
-                            <Button Text="Kitchen" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
+                            <!--Bedroom-->
+                            <Button Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
                                      HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="180"/>
+                            <VerticalStackLayout Grid.Row="2" Grid.Column="2" Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Light: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.Light}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="2" Spacing="5">
+                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
 
                         </Grid>
                     </StackLayout>
@@ -64,90 +109,19 @@
 
             <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
 
-                <StackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
+                <VerticalStackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
-                    <Label Text="Historical Data/Room Information (To be dynamized)" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+                    <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
+                    <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
 
-                    <StackLayout x:Name="stacklayoutRightInner" Margin="4" Spacing="2" Padding="2">
-                        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Bedroom</x:String>
-                                    <x:String>Bathroom</x:String>
-                                    <x:String>Living Room</x:String>
-                                    <x:String>Kitchen</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </StackLayout>
-                </StackLayout>
+
+                    <!--<GraphicsView Drawable="{StaticResource drawable}"
+                      HeightRequest="300"
+                      WidthRequest="400" />-->
+
+
+                </VerticalStackLayout>
             </Border>
         </HorizontalStackLayout>
     </ScrollView>
-
-
-    <!--
-        <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-            
-            <Button
-                x:Name="MyFirstButton"
-                Text="Click me"
-                SemanticProperties.Hint="Surprise"
-                Clicked="OnBidenCallBtn"
-                HorizontalOptions="Center" />
-    
-            <Button Text="Click me!">
-    <VisualStateManager.VisualStateGroups>
-        <VisualStateGroup x:Name="CommonStates">
-            <VisualState x:Name="Normal">
-                <VisualState.Setters>
-                    <Setter Property="Scale"
-                            Value="1" />
-                </VisualState.Setters>
-            </VisualState>
-            <VisualState x:Name="Pressed">
-                <VisualState.Setters>
-                    <Setter Property="Scale"
-                            Value="0.8" />
-                </VisualState.Setters>
-            </VisualState>
-        </VisualStateGroup>
-    </VisualStateManager.VisualStateGroups>
-</Button>
-
-
-        </VerticalStackLayout>
-    </ScrollView>
-        -->
-    
 </ContentPage>

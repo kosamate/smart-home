@@ -8,7 +8,7 @@ namespace SonsOfUncleBob.Models
 {
     public class DummyBarcelonaHome : BarcelonaHome
     {
-        DummyBarcelonaHome()
+        public DummyBarcelonaHome()
         {
             foreach(Room room in Rooms)
             {

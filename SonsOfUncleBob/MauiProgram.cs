@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using SonsOfUncleBob.Http;
+using SonsOfUncleBob.Http.DTO;
+using System.Diagnostics;
 
 namespace SonsOfUncleBob
 {
@@ -14,10 +17,10 @@ namespace SonsOfUncleBob
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
-
 #if DEBUG
-		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
+            Program_main.Main();
 
             return builder.Build();
         }

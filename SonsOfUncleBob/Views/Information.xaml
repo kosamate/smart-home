@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SonsOfUncleBob.Views.Information"
+             xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
+    
+    <VerticalStackLayout>
+        <Label Text="Room Information" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding SelectedRoom, Mode=TwoWay}">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Bedroom</x:String>
+                    <x:String>Bathroom</x:String>
+                    <x:String>LivingRoom</x:String>
+                    <x:String>Kitchen</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        
+        <Label Text="Selected room:" FontSize="Default"/>
+        <Label Text="{Binding SelectedRoom}" FontSize="Default"/>
+
+        <Views:PlotView WidthRequest="300" HeightRequest="200"/>
+
+    </VerticalStackLayout>
+    
+    
+</ContentView>

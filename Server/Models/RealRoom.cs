@@ -3,99 +3,123 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Server.Models.Supporters;
 
 namespace Server.Models
 {
     internal class RealRoom
     {
-        protected const double defaultTemperature = 21.0;
-        protected const double defaultThermalTimeConstant = 20.0;
-        private const double temperatureMax = 28.0;
-        private const double temperatureMin = 15.0;
-        private const double temperatureInsensibility = 0.5;
-        private const double temperatureChangeStep = 0.1;
-        protected static Helper helper = new Helper();
-
         public string Name { get; }
         public double Temperature { get; private set; }
+        public bool Light { get; set; }
         public double DesiredTemperature { get; private set; }
-        public bool Light {  get; set; }
         //Thermal time constant in seconds (typical value is between 15 and 30 minutes)
         public double ThermalTimeConstant { get; }
         public TimeOnly LastAdjusted { get; protected set; }
 
-        public bool isReachedTheDesiredTemperature { get; private set; }
+        private bool isReachedTheDesiredTemperature;
 
-        public RealRoom(string name,
-                    double temperature = defaultTemperature,
-                    double desiredTemperature = defaultTemperature,
-                    double timeConstant = defaultThermalTimeConstant)
+        public RealRoom(string name, double temperature, bool light,
+                    double desiredTemperature = RoomDefaults.defaultDesiredTemperature,
+                    double timeConstant = RoomDefaults.defaultThermalTimeConstant)
         {
             this.Name = name;
-            if (temperature < temperatureMin)
-                temperature = temperatureMin;
-            else if (temperature > temperatureMax)
-                temperature = temperatureMax;
-            if (desiredTemperature < temperatureMin || desiredTemperature > temperatureMax)
-                desiredTemperature = defaultTemperature;
-            if (timeConstant <= 0.0)
-                timeConstant = defaultThermalTimeConstant;
-            this.Temperature = temperature;
-            this.DesiredTemperature = desiredTemperature;
-            this.ThermalTimeConstant = timeConstant;
-            this.LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
-            if (temperature <= (desiredTemperature + 0.01) && temperature >= (desiredTemperature - 0.01))
-                isReachedTheDesiredTemperature = true;
+
+            if (temperature < RoomDefaults.temperatureMin)
+                this.Temperature = RoomDefaults.temperatureMin;
+            else if (temperature > RoomDefaults.temperatureMax)
+                this.Temperature = RoomDefaults.temperatureMax;
             else
-                isReachedTheDesiredTemperature = false;
+                this.Temperature = temperature;
+
+            this.Light = light;
+
+            if (desiredTemperature < RoomDefaults.temperatureMin || desiredTemperature > RoomDefaults.temperatureMax)
+                this.DesiredTemperature = RoomDefaults.defaultDesiredTemperature;
+            else
+                this.DesiredTemperature = desiredTemperature;
+
+            if (timeConstant <= 0.0)
+                this.ThermalTimeConstant = RoomDefaults.defaultThermalTimeConstant;
+            else
+                this.ThermalTimeConstant = timeConstant;
+
+            this.LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
+
+            if (this.Temperature <= (this.DesiredTemperature + 0.01) && this.Temperature >= (this.DesiredTemperature - 0.01))
+                this.isReachedTheDesiredTemperature = true;
+            else
+                this.isReachedTheDesiredTemperature = false;
         }
 
-        public void updateTemperature()
+        public virtual void updateMeasuredValues()
         {
-            if (Temperature <= (DesiredTemperature + temperatureInsensibility)
-                && Temperature >= (DesiredTemperature - temperatureInsensibility)
+            if (Temperature <= (DesiredTemperature + RoomDefaults.temperatureInsensitivity)
+                && Temperature >= (DesiredTemperature - RoomDefaults.temperatureInsensitivity)
                 && isReachedTheDesiredTemperature)
             {
                 updateTemperatureBetweenInsensibility();
+                isReachedTheDesiredTemperature = !isOutOfInsensivityRange();
                 return;
             }
-            var timeNow = TimeOnly.FromDateTime(DateTime.Now);
-            var timeDifference = timeNow - LastAdjusted;
-            double differenceInSeconds = helper.calculateDifferenceInSeconds(timeDifference);
-            double ratio = helper.calculateRatio(differenceInSeconds, this.ThermalTimeConstant);
-            double disturbance = helper.getRandomDisturbance();
-            Temperature += (ratio * (DesiredTemperature - Temperature) + disturbance);
-            if (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01))
-                isReachedTheDesiredTemperature = true;
+
+            double difference = Helper.calculateDifference(Temperature, DesiredTemperature, LastAdjusted, ThermalTimeConstant);
+            Temperature += difference;
+
+            isReachedTheDesiredTemperature = isTemperatureAndDesiredTemperatureEqual();
         }
 
         public void updateDesiredTemperature(double temperature)
         {
             LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
-            if (temperature < temperatureMin)
-                temperature = temperatureMin;
-            else if (temperature > temperatureMax)
-                temperature = temperatureMax;
-            DesiredTemperature = temperature;
+            if (temperature < RoomDefaults.temperatureMin)
+                DesiredTemperature = RoomDefaults.temperatureMin;
+            else if (temperature > RoomDefaults.temperatureMax)
+                DesiredTemperature = RoomDefaults.temperatureMax;
+            else
+                DesiredTemperature = temperature;
+        }
+
+        public override string ToString()
+        {
+            string light = "Off";
+            if (Light)
+                light = "On";
+            return $"{Name}:\n\tlight: {light}\n\ttemperature: {Temperature},\n\tdesired temperature: {DesiredTemperature},\n" +
+                $"\tthermal time constant: {ThermalTimeConstant}\n\tlast adjusted: {LastAdjusted.ToString()},\n" +
+                $"\ttime now: {TimeOnly.FromDateTime(DateTime.Now).ToString()}\n" +
+                $"\ttime between them: {(TimeOnly.FromDateTime(DateTime.Now)-LastAdjusted).ToString()}\n" +
+                $"\tis reached the desired temperature: {isReachedTheDesiredTemperature}";
         }
 
         //The outside temperature can be more or less than the inside, so the inside temperature can change up or down.
         //Now I decide this with the help of a random number generator.
         private void updateTemperatureBetweenInsensibility()
         {
-            if (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01))
+            if (isTemperatureAndDesiredTemperatureEqual())
             {
-                double sign = helper.getRandomSign();
-                Temperature += (sign * temperatureChangeStep);
+                double sign = Helper.getRandomSign();
+                Temperature += (sign * RoomDefaults.temperatureChangeStep);
             }
             else
             {
                 if (Temperature > DesiredTemperature)
-                    Temperature += temperatureChangeStep;
+                    Temperature += RoomDefaults.temperatureChangeStep;
                 else
-                    Temperature -= temperatureChangeStep;
+                    Temperature -= RoomDefaults.temperatureChangeStep;
             }
 
+        }
+
+        private bool isOutOfInsensivityRange()
+        {
+            return (Temperature >= (DesiredTemperature + RoomDefaults.temperatureInsensitivity)
+                    || Temperature <= (DesiredTemperature - RoomDefaults.temperatureInsensitivity));
+        }
+
+        private bool isTemperatureAndDesiredTemperatureEqual()
+        {
+            return (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01));
         }
     }
 }

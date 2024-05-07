@@ -3,74 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Server.Models.Supporters;
 
 namespace Server.Models
 {
     internal class RealBathroom : RealRoom
     {
-        private const double defaultHumidity = 40.0;
-        private const double defaultHumidityTimeConstant = 40.0;
-        private const double humidityMax = 70;
-        private const double humidityMin = 30;
-        private const double humidityInsesibility = 4.0;
-        private const double humidityChangeStep = 1.0;
-
         public double Humidity { get; private set; }
         public double DesiredHumidity { get; private set; }
         //Humidity time constant in seconds (typical value is a few hours)
         public double HumidityTimeConstant { get; }
 
 
-        public RealBathroom(string name,
-                        double temperature = defaultTemperature,
-                        double desiredTemperature = defaultTemperature,
-                        double timeConstant = defaultThermalTimeConstant,
-                        double humidity = defaultHumidity,
-                        double desiredHumidity = defaultHumidity,
-                        double humidityTimeConstant = defaultHumidityTimeConstant)
-            :base(name, temperature, desiredTemperature, timeConstant)
+        public RealBathroom(string name, double temperature, bool light, double humidity,
+                        double desiredTemperature = RoomDefaults.defaultDesiredTemperature,
+                        double timeConstant = RoomDefaults.defaultThermalTimeConstant,
+                        double desiredHumidity = BathroomDefaults.defaultDesiredHumidity,
+                        double humidityTimeConstant = BathroomDefaults.defaultHumidityTimeConstant)
+            :base(name, temperature, light, desiredTemperature, timeConstant)
         {
-            if (humidity < humidityMin)
-                humidity = humidityMin;
+            if (humidity < BathroomDefaults.humidityMin)
+                this.Humidity = BathroomDefaults.humidityMin;
             else if (humidity > 100.0)
-                humidity = humidityMax;
-            if (desiredHumidity < humidityMin || desiredHumidity > humidityMax)
-                desiredHumidity = defaultHumidity;
+                this.Humidity = BathroomDefaults.humidityMax;
+            else
+                this.Humidity = humidity;
+
+            if (desiredHumidity < BathroomDefaults.humidityMin || desiredHumidity > BathroomDefaults.humidityMax)
+                this.DesiredHumidity = BathroomDefaults.defaultDesiredHumidity;
+            else
+                this.DesiredHumidity = desiredHumidity;
+
             if (humidityTimeConstant <= 0.0)
-                humidityTimeConstant = defaultHumidityTimeConstant;
-            this.Humidity = humidity;
-            this.DesiredHumidity = desiredHumidity;
-            this.HumidityTimeConstant = humidityTimeConstant;
+                this.HumidityTimeConstant = BathroomDefaults.defaultHumidityTimeConstant;
+            else
+                this.HumidityTimeConstant = humidityTimeConstant;
         }
 
-        public void updateHumidity()
+        public override void updateMeasuredValues()
         {
-            if (Humidity <= (DesiredHumidity + humidityInsesibility))
+            base.updateMeasuredValues();
+
+            if (Humidity <= (DesiredHumidity + BathroomDefaults.humidityInsensitivity))
             {
                 updateHumidityWithoutDehumidifier();
                 return;
             }
-            var timeNow = TimeOnly.FromDateTime(DateTime.Now);
-            var timeDifference = timeNow - LastAdjusted;
-            double differenceInSeconds = helper.calculateDifferenceInSeconds(timeDifference);
-            double ratio = helper.calculateRatio(differenceInSeconds, this.HumidityTimeConstant);
-            double disturbance = helper.getRandomDisturbance();
-            Humidity += (ratio * (DesiredHumidity - Humidity) + disturbance);
+
+            double difference = Helper.calculateDifference(Humidity, DesiredHumidity, LastAdjusted, HumidityTimeConstant);
+            Humidity += difference;
         }
 
         public void updateDesiredHumidity(double humidity)
         {
             LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
-            if (humidity < humidityMin)
-                humidity = humidityMin;
-            else if (humidity > humidityMax)
-                humidity = humidityMax;
-            this.Humidity = humidity;
+            if (humidity < BathroomDefaults.humidityMin)
+                DesiredHumidity = BathroomDefaults.humidityMin;
+            else if (humidity > BathroomDefaults.humidityMax)
+                DesiredHumidity = BathroomDefaults.humidityMax;
+            else
+                DesiredHumidity = humidity;
+        }
+
+        public override string ToString()
+        {
+            string roomString = base.ToString();
+            string answer = roomString + $"\n\thumidity: {Humidity}\n\tdesired humidity: {DesiredHumidity}\n" +
+                $"\thumidity time constant: {HumidityTimeConstant}";
+            return answer;
         }
 
         private void updateHumidityWithoutDehumidifier()
         {
-            Humidity += humidityChangeStep;
+            Humidity += BathroomDefaults.humidityChangeStep;
             return;
         }
     }
