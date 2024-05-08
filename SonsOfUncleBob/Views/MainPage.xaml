@@ -8,17 +8,17 @@
              xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
 
     <ContentPage.Resources>
-        <drawable:GraphicsDrawable x:Key="drawable" />
+        <!--<drawable:GraphicsDrawable x:Key="drawable" />-->
         <Converters:NegateConverter x:Key ="NegateConverter"/>
     </ContentPage.Resources>
 
     <ScrollView>
         <HorizontalStackLayout>
-            <Border Stroke="black" Background="LightBlue" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
+            <Border Stroke="black" Background="LightBlue" StrokeThickness="2" Margin="10" HorizontalOptions="Fill" >
 
-                <StackLayout x:Name="stacklayoutLeftOuter" Margin="10" Background="LightBlue" Spacing="5" Padding="10">
+                <StackLayout Margin="10" Background="LightBlue" Spacing="5" Padding="10">
 
-                    <Label Text="Our House" FontSize="Large" FontAttributes ="Bold" HorizontalOptions="Center" />
+                    <Label Text="Our House" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
                     <HorizontalStackLayout HorizontalOptions="End">
                         <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
@@ -28,7 +28,7 @@
                         <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
                     </HorizontalStackLayout>
 
-                    <StackLayout x:Name="stacklayoutLeftInner" Margin="10" Background="Black" Spacing="10" Padding="2">
+                    <StackLayout Margin="10" Background="Black" Spacing="10" Padding="2">
 
                         <Grid BackgroundColor="Black" RowSpacing="7" ColumnSpacing="8">
 
@@ -46,58 +46,57 @@
                             </Grid.ColumnDefinitions>
 
                             <!--Kitchen-->
-                            <Button Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" x:Name="CounterBtn" 
-                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="350"
-                                    Clicked="OnCounterClicked" Pressed="Btn_Pressed" />
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Padding="2" Spacing="5">
-                                <HorizontalStackLayout Padding="2" Spacing="5">
+                            <Label Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
+                                   HeightRequest="200" WidthRequest="350"/>
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1"  Padding="2" Spacing="5">
+                                <HorizontalStackLayout Padding="2" Spacing="2">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding Kitchen.Light}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
-                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding Kitchen.SignalSummary}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
                             <!--Bathroom-->
-                            <Button Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" x:Name="CounterBtn2"
-                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="200" WidthRequest="180" />
+                            <Label Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
+                                   HeightRequest="200" WidthRequest="180" />
                             <VerticalStackLayout Grid.Row="1" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5" >
                                     <Label Text="Light: " FontSize="Default" TextColor="White" />
                                     <Label Text="{Binding BathRoom.Light}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
-                                    <Label Text="Signals: " FontSize="Default" TextColor="White" />
                                     <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
                             <!--Livingroom-->
-                            <Button Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" x:Name="CounterBtn3"
-                                    HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="350"/>
+                            <Label Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                   HeightRequest="300" WidthRequest="350"/>
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding LivingRoom.Light}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
-                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding LivingRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
                             <!--Bedroom-->
-                            <Button Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" x:Name="CounterBtn4"
-                                     HorizontalOptions="Center" VerticalOptions="Center" CornerRadius="0" HeightRequest="300" WidthRequest="180"/>
+                            <Label Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" TextColor="White"
+                                   HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
+                                   HeightRequest="300" WidthRequest="180"/>
                             <VerticalStackLayout Grid.Row="2" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding BedRoom.Light}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
-                                    <Label Text="Signals: " FontSize="Default" TextColor="White"/>
                                     <Label Text="{Binding BedRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
@@ -109,7 +108,7 @@
 
             <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
 
-                <VerticalStackLayout x:Name="stacklayoutRightOuter" Margin="0" Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
+                <VerticalStackLayout Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
                     <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
                     <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>

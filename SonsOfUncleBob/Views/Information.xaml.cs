@@ -1,7 +1,4 @@
 using SonsOfUncleBob.ViewModels;
-using OxyPlot;
-using OxyPlot.Series;
-using OxyPlot.Maui;
 
 
 namespace SonsOfUncleBob.Views;
