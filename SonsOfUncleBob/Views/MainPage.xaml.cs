@@ -10,7 +10,8 @@ namespace SonsOfUncleBob
 
         public MainPage()
         {
-            this.BindingContext = viewModel;
+
+            BindingContext = viewModel;
             InitializeComponent();
 
         }

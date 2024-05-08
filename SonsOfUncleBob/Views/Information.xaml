@@ -7,24 +7,17 @@
     <VerticalStackLayout>
         <Label Text="Room Information" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding SelectedRoom, Mode=TwoWay}">
-            <Picker.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>Bedroom</x:String>
-                    <x:String>Bathroom</x:String>
-                    <x:String>LivingRoom</x:String>
-                    <x:String>Kitchen</x:String>
-                </x:Array>
-            </Picker.ItemsSource>
+        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black"  SelectedItem="{Binding Room, Mode=TwoWay}" ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}">
+
         </Picker>
 
         
         <Label Text="Selected room:" FontSize="Default"/>
-        <Label Text="{Binding SelectedRoom}" FontSize="Default"/>
+        <Label Text="{Binding Room.Name}" FontSize="Default"/>
 
         
         <HorizontalStackLayout Spacing="50">
-            <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Medium"/>
+            <Label Text="{Binding Room.SignalSummary}" FontSize="Medium"/>
             <Label Text="Desired Temperature:" FontSize="Medium"/>
             <Entry Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
         </HorizontalStackLayout>

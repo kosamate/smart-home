@@ -110,8 +110,8 @@
 
                 <VerticalStackLayout Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
-                    <Views:Information IsVisible="{Binding IsInformationPageActive}"/>
-                    <Views:History IsVisible="{Binding IsInformationPageActive, Converter={StaticResource NegateConverter}}"/>
+                    <Views:Information IsVisible="{Binding IsVisible}" BindingContext="{Binding InformationViewModel}"/>
+                    <Views:History IsVisible="{Binding IsVisible}" BindingContext="{Binding HistoryViewModel}"/>
 
 
                     <!--<GraphicsView Drawable="{StaticResource drawable}"
