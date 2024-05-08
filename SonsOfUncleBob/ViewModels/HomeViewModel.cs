@@ -11,12 +11,25 @@ namespace SonsOfUncleBob.ViewModels
 {
     public class HomeViewModel : ObservableObject
     {
-        public Home homeModel = new DummyBarcelonaHome();
+        public HomeViewModel()
+        {
+            Rooms = new();
+
+            foreach (RoomModel room in homeModel.Rooms)
+                Rooms.Add(new RoomViewModel(room));
+            SelectedRoom = Rooms.FirstOrDefault();
+
+            InformationViewModel = new(this);
+            HistoryViewModel = new(this);
+            IsInformationPageActive = true;
+        }
+
+        private HomeModel homeModel = new DummyBarcelonaHomeModel();
+
         private Page page { get; set; }
 
-        public string selectedRoom;
-
-        public string SelectedRoom
+        private RoomViewModel selectedRoom;
+        public RoomViewModel SelectedRoom
         {
             get { return selectedRoom; }
             set
@@ -28,48 +41,30 @@ namespace SonsOfUncleBob.ViewModels
                 }
             }
         }
-        public bool IsInformationPageActive {
+        public bool IsInformationPageActive
+        {
             get { return page == Page.Information; }
-            set {
+            set
+            {
                 page = value ? Page.Information : Page.History;
+                InformationViewModel.IsVisible = value;
+                HistoryViewModel.IsVisible = !value;
                 Notify();
             }
         }
-        public HomeViewModel()
-        {
-            page = Page.Information;
 
-            foreach (Room room in homeModel.Rooms)
+        public InformationViewModel InformationViewModel { get; init; }
+        public HistoryViewModel HistoryViewModel { get; init; }
 
-                switch(room.Name)
-                {
-                    case "Kitchen": Kitchen = new RoomViewModel(room); break;
-                    case "Living Room": LivingRoom = new RoomViewModel(room); break;
-                    case "Bedroom": BedRoom = new RoomViewModel(room); break;
-                    case "Bathroom": BathRoom = new RoomViewModel(room); break;
-                }
-        }
+        public List<RoomViewModel> Rooms { get; init; }
 
-
-        public IEnumerable<RoomViewModel> Rooms
-        {
-            get
-            {
-                yield return Kitchen;
-                yield return LivingRoom;
-                yield return BedRoom;
-                yield return BathRoom;
-            }
-        }
-
-        public RoomViewModel Kitchen { get; init; }
-        public RoomViewModel LivingRoom { get; init; }
-        public RoomViewModel BedRoom { get; init; }
-        public RoomViewModel BathRoom { get; init; }
+        public RoomViewModel Kitchen { get => Rooms.Where(r => r.Name == "Kitchen").First(); }
+        public RoomViewModel LivingRoom { get => Rooms.Where(r => r.Name == "Living Room").First(); }
+        public RoomViewModel BedRoom { get => Rooms.Where(r => r.Name == "Bedroom").First(); }
+        public RoomViewModel BathRoom { get => Rooms.Where(r => r.Name == "Bathroom").First(); }
     }
 
-    public enum Page {Information, History}
-    public enum SelectedRoom { Kitchen, Bathroom, Bedroom, LivingRoom }
+    public enum Page { Information, History }
 
 
 }

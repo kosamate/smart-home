@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    public class HomeSignal
+    public class SignalModel
 
     {
         public enum SignalCategory
@@ -16,19 +16,18 @@ namespace SonsOfUncleBob.Models
         }
         public string Name { get; private set; }
         public string UnitOfMeasure { get; private set; }
-        public Queue<float> Values { get; set; }
+        public float CurrentValue { get; set; }
         public float? DesiredValue { get; set; }
         public SignalCategory Category { get; private set;}
 
-        public HomeSignal(string name, string unitOfMeasure, SignalCategory category)
+        public SignalModel(string name, string unitOfMeasure, SignalCategory category)
         {
             Name = name;
             UnitOfMeasure = unitOfMeasure;
-            Values = new Queue<float>(capacity: PreviousValuesCount);
+            CurrentValue = float.NaN;
             Category = category;
             DesiredValue = null;
         }
 
-        private const int PreviousValuesCount = 20;
     }
 }

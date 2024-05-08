@@ -2,9 +2,9 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SonsOfUncleBob.Views.PlotView"
+              xmlns:oxy="clr-namespace:OxyPlot.Maui.Skia;assembly=OxyPlot.Maui.Skia"
             xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
-    
-    <VerticalStackLayout>
-        <Views:PlotView WidthRequest="300" HeightRequest="200" />
-    </VerticalStackLayout>
+
+    <oxy:PlotView Model="{Binding Model}" HeightRequest="300" WidthRequest="400"/>
+
 </ContentView>
