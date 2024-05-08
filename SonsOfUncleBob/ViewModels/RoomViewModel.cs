@@ -9,26 +9,26 @@ namespace SonsOfUncleBob.ViewModels
 {
     public class RoomViewModel
     {
-        private Room room;
-        private List<HomeSignalViewModel> signals = new List<HomeSignalViewModel>();
+        public RoomViewModel(RoomModel room)
+        {
+            this.room = room;
+            foreach (SignalModel signal in room.Signals)
+                signals.Add(new SignalViewModel(signal));
+        }
+        private RoomModel room;
+        private List<SignalViewModel> signals = new List<SignalViewModel>();
         public string Name { get => room.Name; }
         public string Light { get => room.Light ? "On" : "Off"; }
         public string SignalSummary
         {
             get {
                 string summary = "";
-                foreach (HomeSignal signal in room.Signals)
-                    summary += $"{signal.Name}: {signal.Values.Peek()} {signal.UnitOfMeasure}\n";
+                foreach (SignalViewModel signal in signals)
+                    summary += $"{signal.Name}: {signal.CurrentValueWithUnit}\n";
                 return summary;
             }
         }
-        public IEnumerable<HomeSignalViewModel> Signals { get => signals; }
+        public List<SignalViewModel> Signals { get => signals; }
 
-        public RoomViewModel(Room room)
-        {
-            this.room = room;
-            foreach (HomeSignal signal in room.Signals)
-                signals.Add(new HomeSignalViewModel(signal));
-        }
     }
 }

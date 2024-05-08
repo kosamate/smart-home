@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace SonsOfUncleBob.Models
 {
     //Plus Point: Dependency Inversion with this base class
-    public abstract class Home
+    public abstract class HomeModel
     {
-        public abstract List<Room> Rooms { get; }
+        public abstract List<RoomModel> Rooms { get; }
     }
 }

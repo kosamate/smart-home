@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Models
 {
-    public class Room
+    public class RoomModel
     {
         //Plus Point: Builder design pattern
         public class RoomBuilder
         {
-            private Room room = new();
+            private RoomModel room = new();
             public RoomBuilder()
             {
                 room.Signals = new();
@@ -29,12 +29,12 @@ namespace SonsOfUncleBob.Models
                 return this;
             }
 
-            public RoomBuilder AddSignal(HomeSignal signal)
+            public RoomBuilder AddSignal(SignalModel signal)
             {
                 room.Signals.Add(signal);
                 return this;
             }
-            public Room Build()
+            public RoomModel Build()
             {
                 if (room.Name == null)
                     throw new ArgumentNullException("Name of the room is a required property.");
@@ -47,8 +47,8 @@ namespace SonsOfUncleBob.Models
         public string Name { get; private set; }
         public bool Light { get; private set; }
 
-        public List<HomeSignal> Signals { get; private set; }
-        private Room()
+        public List<SignalModel> Signals { get; private set; }
+        private RoomModel()
         {
 
         }

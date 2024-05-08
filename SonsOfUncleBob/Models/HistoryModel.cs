@@ -15,15 +15,14 @@ namespace SonsOfUncleBob.Database
 
         public HistoryModel()
         {
-            throw new NotImplementedException();
             //HttpDataProvider.Instance.DataReceived += DataReceived;
         }
 
-        public IEnumerable<KeyValuePair<DateTime, float>> GetSignalHistory(Models.Room room, string signalName, DateTime from, DateTime to)
+        public IEnumerable<KeyValuePair<DateTime, float>> GetSignalHistory(string roomName, string signalName, DateTime from, DateTime to)
         {
 
             return dbContext.Signals
-                .Where(s => s.Room.Name == room.Name && s.Type.Name == signalName && s.Timestamp > from && s.Timestamp < to)
+                .Where(s => s.Room.Name == roomName && s.Type.Name == signalName && s.Timestamp > from && s.Timestamp < to)
                 .Select(s => new KeyValuePair<DateTime, float>(s.Timestamp, s.Value))
                 .OrderBy(pair => pair.Key);
         }
