@@ -9,12 +9,12 @@
 <VerticalStackLayout>
     <Label Text="Data History" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding Room, Mode=TwoWay}" ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}">
+        <Picker x:Name="myDropdown" Title="Select a Room" Background="WhiteSmoke" TextColor="Black" SelectedItem="{Binding SelectedRoom, Mode=TwoWay}" ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}">
 
         </Picker>
 
         <Label Text="Selected room:" FontSize="Default" />
-        <Label Text="{Binding Room.Name}" FontSize="Default" />
+        <Label Text="{Binding SelectedRoom.Name}" FontSize="Default" />
 
         <micro:ChartView x:Name="chartView" HeightRequest="500" />
 

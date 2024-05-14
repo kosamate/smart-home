@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using SonsOfUncleBob.ViewModels;
 using Microcharts.Maui;
+using SonsOfUncleBob.Models;
+using SonsOfUncleBob.Database;
 
 namespace SonsOfUncleBob
 {
@@ -19,8 +21,10 @@ namespace SonsOfUncleBob
 
             builder.UseMicrocharts();
 
-            builder.Services.AddSingleton<HomeViewModel>();
-            builder.Services.AddSingleton<MainPage>();
+            builder.AddModels();
+            builder.AddViewModels();
+            builder.AddView();
+
 
 #if DEBUG
             builder.Logging.AddDebug();
@@ -29,6 +33,27 @@ namespace SonsOfUncleBob
 #endif
             var a = Program_main.Main();
             return builder.Build();
+        }
+
+        private static MauiAppBuilder AddModels(this MauiAppBuilder builder)
+        {
+            builder.Services.AddSingleton<BarcelonaHomeModel>();
+            builder.Services.AddSingleton<HistoryModel>();
+            return builder;
+        }
+
+        private static MauiAppBuilder AddViewModels(this MauiAppBuilder builder)
+        {
+            builder.Services.AddSingleton<HomeViewModel>();
+            builder.Services.AddSingleton<HistoryViewModel>();
+            builder.Services.AddSingleton<InformationViewModel>();
+            return builder;
+        }
+
+        private static MauiAppBuilder AddView(this MauiAppBuilder builder)
+        {
+            builder.Services.AddSingleton<MainPage>();
+            return builder;
         }
     }
 }

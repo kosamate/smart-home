@@ -11,36 +11,23 @@ namespace SonsOfUncleBob.ViewModels
 {
     public class HomeViewModel : ObservableObject
     {
-        public HomeViewModel()
+        public HomeViewModel(BarcelonaHomeModel homeModel, InformationViewModel informationViewModel, HistoryViewModel historyViewModel)
         {
-            Rooms = new();
-
+            InformationViewModel = informationViewModel;
+            HistoryViewModel = historyViewModel;
             foreach (RoomModel room in homeModel.Rooms)
-                Rooms.Add(new RoomViewModel(room));
-            SelectedRoom = Rooms.FirstOrDefault();
+            {
+                var roomviewModel = new RoomViewModel(room);
+                Rooms.Add(roomviewModel);
+                DetailsViewModel.AddToRoomList(roomviewModel);
+            }
 
-            InformationViewModel = new(this);
-            HistoryViewModel = new(this);
             IsInformationPageActive = true;
         }
 
-        private HomeModel homeModel = new DummyBarcelonaHomeModel();
-
         private Page page { get; set; }
 
-        private RoomViewModel selectedRoom;
-        public RoomViewModel SelectedRoom
-        {
-            get { return selectedRoom; }
-            set
-            {
-                if (selectedRoom != value)
-                {
-                    selectedRoom = value;
-                    Notify();
-                }
-            }
-        }
+  
         public bool IsInformationPageActive
         {
             get { return page == Page.Information; }
@@ -56,7 +43,7 @@ namespace SonsOfUncleBob.ViewModels
         public InformationViewModel InformationViewModel { get; init; }
         public HistoryViewModel HistoryViewModel { get; init; }
 
-        public List<RoomViewModel> Rooms { get; init; }
+        public List<RoomViewModel> Rooms { get; init; } = new();
 
         public RoomViewModel Kitchen { get => Rooms.Where(r => r.Name == "Kitchen").First(); }
         public RoomViewModel LivingRoom { get => Rooms.Where(r => r.Name == "Living Room").First(); }
