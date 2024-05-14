@@ -74,7 +74,7 @@ namespace Server.Http.Listener
             {
                 {
                     roomDTO.DesiredTemperature = RoomDefaults.defaultDesiredTemperature;
-                    roomDTO.Light = LightState.Default;
+                    roomDTO.Light = RoomDefaults.defaultLightState;
                     if (roomDTO is BathroomDTO)
                         ((BathroomDTO)roomDTO).DesiredHumidity = BathroomDefaults.defaultDesiredHumidity;
                 }
