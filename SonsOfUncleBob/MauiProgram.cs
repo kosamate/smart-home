@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using SonsOfUncleBob.Http;
 using SonsOfUncleBob.ViewModels;
-using SonsOfUncleBob.Views;
-using System.Diagnostics;
+using Microcharts.Maui;
 
 namespace SonsOfUncleBob
 {
@@ -19,14 +17,17 @@ namespace SonsOfUncleBob
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            builder.UseMicrocharts();
+
             builder.Services.AddSingleton<HomeViewModel>();
             builder.Services.AddSingleton<MainPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
-#endif
-            Program_main.Main();
 
+
+#endif
+            var a = Program_main.Main();
             return builder.Build();
         }
     }
