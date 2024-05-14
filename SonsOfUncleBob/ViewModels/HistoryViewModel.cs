@@ -11,14 +11,15 @@ namespace SonsOfUncleBob.ViewModels
 {
     public class HistoryViewModel : DetailsViewModel
     {
-        public HistoryViewModel(HomeViewModel parent) : base(parent)
+        public HistoryViewModel(HistoryModel historyModel)
         {
-            SelectedSignal = Room.Signals.FirstOrDefault();
+            this.historyModel = historyModel;
+            SelectedSignal = SelectedRoom?.Signals.FirstOrDefault();
             SignalPlotModel = new PlotModel();
             UpdatePlotModel();
         }
 
-        private HistoryModel historyModel = new();
+        private HistoryModel historyModel;
 
         private DateTime startDate = DateTime.Now.AddDays(-1);
         public DateTime StartDate
@@ -49,10 +50,10 @@ namespace SonsOfUncleBob.ViewModels
             }
         }
 
-        public List<SignalViewModel> Signals { get => Room.Signals; }
+        public List<SignalViewModel>? Signals { get => SelectedRoom?.Signals; }
 
-        private SignalViewModel selectedSignal;
-        public SignalViewModel SelectedSignal { 
+        private SignalViewModel? selectedSignal;
+        public SignalViewModel? SelectedSignal { 
             get => selectedSignal;
             set 
             { 
@@ -68,14 +69,14 @@ namespace SonsOfUncleBob.ViewModels
 
         private void UpdatePlotModel()
         {
-            SignalPlotModel.Title = Room.Name;
+            SignalPlotModel.Title = SelectedRoom?.Name;
             SignalPlotModel.Series.Clear();
 
             LineSeries lineserie = new LineSeries
             {
                 ItemsSource = GetDummyDataPoints(),
                 DataFieldX = "Time",
-                DataFieldY = SelectedSignal.Name,
+                DataFieldY = SelectedSignal?.Name,
                 StrokeThickness = 2,
                 MarkerSize = 0,
                 LineStyle = LineStyle.Solid,
@@ -89,7 +90,7 @@ namespace SonsOfUncleBob.ViewModels
 
         private IEnumerable<DataPoint> GetDataPoints()
         {
-            foreach (var point in historyModel.GetSignalHistory(Room.Name, SelectedSignal.Name, StartDate, EndDate))
+            foreach (var point in historyModel.GetSignalHistory(SelectedRoom.Name, SelectedSignal.Name, StartDate, EndDate))
             {
                 double time = (point.Key - StartDate).TotalMinutes;
                 yield return new DataPoint(time, point.Value);

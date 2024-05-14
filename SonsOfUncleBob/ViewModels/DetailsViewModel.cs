@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,35 +10,24 @@ namespace SonsOfUncleBob.ViewModels
 {
     public abstract class DetailsViewModel : ObservableObject
     {
-        public DetailsViewModel(HomeViewModel parent)
+        public DetailsViewModel()
         {
-            this.parent = parent;
-            parent.PropertyChanged += ParentPropertyChanged;
+            viewModels.Add(this);
+            roomList.CollectionChanged += RoomListChanged;
         }
-
-        protected virtual void ParentPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public RoomViewModel? SelectedRoom
         {
-            if (nameof(parent.SelectedRoom).Contains(e.PropertyName))
-                Notify(nameof(Room));
-        }
-
-        private HomeViewModel parent;
-
-        public RoomViewModel Room
-        {
-            get => parent.SelectedRoom;
+            get => selectedRoom;
             set
             {
-                if (value != parent.SelectedRoom)
+                if (value != selectedRoom)
                 {
-                    parent.SelectedRoom = value;
-                    Notify();
+                    selectedRoom = value;
+                    NotifyAll();
                 }
             }
         }
-        public List<RoomViewModel> RoomList { get => parent.Rooms; }
-
-        private bool isVisible = false;
+        public ObservableCollection<RoomViewModel> RoomList { get => roomList; } 
         public bool IsVisible
         {
             get => isVisible;
@@ -45,6 +36,28 @@ namespace SonsOfUncleBob.ViewModels
                 isVisible = value;
                 Notify();
             }
+        }
+
+        public static void AddToRoomList(RoomViewModel roomViewModel)
+        {
+            roomList.Add(roomViewModel);
+        }
+
+        private static List<DetailsViewModel> viewModels = new List<DetailsViewModel>();
+
+        private static RoomViewModel? selectedRoom;
+
+        private static ObservableCollection<RoomViewModel> roomList = new ObservableCollection<RoomViewModel>();
+
+        private bool isVisible = false;
+        private void RoomListChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            NotifyAll(nameof(RoomList));
+        }
+        private void NotifyAll([CallerMemberName] string propertyName = "")
+        {
+            foreach (var viewModel in viewModels)
+                viewModel.Notify(propertyName);
         }
 
 

@@ -8,7 +8,7 @@ namespace SonsOfUncleBob.ViewModels
 {
     public class InformationViewModel : DetailsViewModel
     {
-        public InformationViewModel(HomeViewModel parent) : base(parent)
+        public InformationViewModel()
         {
 
         }

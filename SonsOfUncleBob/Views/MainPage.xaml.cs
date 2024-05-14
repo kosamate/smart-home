@@ -6,9 +6,8 @@ namespace SonsOfUncleBob
     {
         int count = 0;
         bool ButtonPressed = false;
-        HomeViewModel viewModel = new();
 
-        public MainPage()
+        public MainPage(HomeViewModel viewModel)
         {
 
             BindingContext = viewModel;
