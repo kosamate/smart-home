@@ -11,8 +11,8 @@ namespace Server.Http.DTO
         {
             this.Rooms = new List<RoomDTO>();
             foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
-                this.Rooms.Add(new RoomDTO(roomName, 24.0, RoomDefaults.defaultDesiredTemperature, LightState.Off));
-            this.Rooms.Add(new BathroomDTO("Bathroom", 24.0, RoomDefaults.defaultDesiredTemperature, LightState.Off, 70.0, BathroomDefaults.defaultDesiredHumidity));
+                this.Rooms.Add(new RoomDTO(roomName, 24.0, RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultLightState));
+            this.Rooms.Add(new BathroomDTO("Bathroom", 24.0, RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultLightState, 70.0, BathroomDefaults.defaultDesiredHumidity));
         }
 
         public void updateRoom(RoomDTO roomDTO)

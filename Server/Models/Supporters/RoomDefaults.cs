@@ -14,5 +14,6 @@ namespace Server.Models.Supporters
         public const double temperatureMin = 15.0;
         public const double temperatureInsensitivity = 0.5;
         public const double temperatureChangeStep = 0.1;
+        public const bool defaultLightState = false;
     }
 }

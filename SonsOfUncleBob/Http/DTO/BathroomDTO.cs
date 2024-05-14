@@ -3,7 +3,7 @@ namespace SonsOfUncleBob.Http.DTO
 {
     //Valamiért nem tudtuk a projekt dependency-jébe a Server projektet felvenni
     //Így egyelőre itt is megvalósítottam ezeket az osztályokat/struktúrát, hogy a http klienssel tudjak haladni
-    internal class BathroomDTO : RoomDTO
+    public class BathroomDTO : RoomDTO
     {
         public double Humidity { get; set; }
         public double DesiredHumidity { get; set; }
