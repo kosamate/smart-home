@@ -2,6 +2,7 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SonsOfUncleBob.Views.History"
+             xmlns:micro="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
 
 
@@ -15,7 +16,7 @@
         <Label Text="Selected room:" FontSize="Default" />
         <Label Text="{Binding Room.Name}" FontSize="Default" />
 
-        <Views:PlotView WidthRequest="300" HeightRequest="200" />
+        <micro:ChartView x:Name="chartView" HeightRequest="500" />
 
 
     </VerticalStackLayout>
