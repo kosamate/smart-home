@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SonsOfUncleBob.Models;
 
 namespace SonsOfUncleBob
 {
@@ -13,6 +14,9 @@ namespace SonsOfUncleBob
     {
         public static async Task Main()
         {
+            DataProvider dataProvider = new();
+            
+            /*
             Client client = new Client();
 
             List<RoomDTO> roomlist = await client.GetRoomsList();
@@ -21,7 +25,7 @@ namespace SonsOfUncleBob
 
             RoomDTO roomDTO = roomlist[0];
             roomDTO.DesiredTemperature = 28.5;
-            roomDTO.Light = LightState.On;
+            roomDTO.Light = true;
             string res = await client.PutRoom(roomDTO);
             Debug.WriteLine(res);
 
@@ -33,7 +37,7 @@ namespace SonsOfUncleBob
             Debug.WriteLine(bathroom);
 
             bathroom.DesiredHumidity = 55.0;
-            bathroom.Light = LightState.On;
+            bathroom.Light = true;
             bathroom.DesiredTemperature = 18.5;
             res = await client.PutBathroom(bathroom);
             Debug.WriteLine(res);
@@ -49,6 +53,7 @@ namespace SonsOfUncleBob
             foreach (RoomDTO room in roomlist)
                 Debug.WriteLine(room);
             Debug.WriteLine(bathroom);
+            */
 
         }   
     }    
