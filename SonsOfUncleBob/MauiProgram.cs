@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SonsOfUncleBob.Http;
-using SonsOfUncleBob.Http.DTO;
+using SonsOfUncleBob.ViewModels;
+using SonsOfUncleBob.Views;
 using System.Diagnostics;
 
 namespace SonsOfUncleBob
@@ -17,6 +18,10 @@ namespace SonsOfUncleBob
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            builder.Services.AddSingleton<HomeViewModel>();
+            builder.Services.AddSingleton<MainPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
