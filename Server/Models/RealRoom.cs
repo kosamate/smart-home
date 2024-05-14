@@ -17,7 +17,7 @@ namespace Server.Models
         public double ThermalTimeConstant { get; }
         public TimeOnly LastAdjusted { get; protected set; }
 
-        private bool isReachedTheDesiredTemperature;
+        private bool hasReachedTheDesiredTemperature;
 
         public RealRoom(string name, double temperature, bool light,
                     double desiredTemperature = RoomDefaults.defaultDesiredTemperature,
@@ -47,26 +47,26 @@ namespace Server.Models
             this.LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
 
             if (this.Temperature <= (this.DesiredTemperature + 0.01) && this.Temperature >= (this.DesiredTemperature - 0.01))
-                this.isReachedTheDesiredTemperature = true;
+                this.hasReachedTheDesiredTemperature = true;
             else
-                this.isReachedTheDesiredTemperature = false;
+                this.hasReachedTheDesiredTemperature = false;
         }
 
         public virtual void updateMeasuredValues()
         {
             if (Temperature <= (DesiredTemperature + RoomDefaults.temperatureInsensitivity)
                 && Temperature >= (DesiredTemperature - RoomDefaults.temperatureInsensitivity)
-                && isReachedTheDesiredTemperature)
+                && hasReachedTheDesiredTemperature)
             {
                 updateTemperatureBetweenInsensibility();
-                isReachedTheDesiredTemperature = !isOutOfInsensivityRange();
+                hasReachedTheDesiredTemperature = !isOutOfInsensivityRange();
                 return;
             }
 
             double difference = Helper.calculateDifference(Temperature, DesiredTemperature, LastAdjusted, ThermalTimeConstant);
             Temperature += difference;
 
-            isReachedTheDesiredTemperature = isTemperatureAndDesiredTemperatureEqual();
+            hasReachedTheDesiredTemperature = isTemperatureAndDesiredTemperatureEqual();
         }
 
         public void updateDesiredTemperature(double temperature)
@@ -89,7 +89,7 @@ namespace Server.Models
                 $"\tthermal time constant: {ThermalTimeConstant}\n\tlast adjusted: {LastAdjusted.ToString()},\n" +
                 $"\ttime now: {TimeOnly.FromDateTime(DateTime.Now).ToString()}\n" +
                 $"\ttime between them: {(TimeOnly.FromDateTime(DateTime.Now)-LastAdjusted).ToString()}\n" +
-                $"\tis reached the desired temperature: {isReachedTheDesiredTemperature}";
+                $"\tis reached the desired temperature: {hasReachedTheDesiredTemperature}";
         }
 
         //The outside temperature can be more or less than the inside, so the inside temperature can change up or down.

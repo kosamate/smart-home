@@ -21,7 +21,7 @@ namespace SonsOfUncleBob
 
             RoomDTO roomDTO = roomlist[0];
             roomDTO.DesiredTemperature = 28.5;
-            roomDTO.Light = LightState.On;
+            roomDTO.Light = true;
             string res = await client.PutRoom(roomDTO);
             Debug.WriteLine(res);
 
@@ -33,7 +33,7 @@ namespace SonsOfUncleBob
             Debug.WriteLine(bathroom);
 
             bathroom.DesiredHumidity = 55.0;
-            bathroom.Light = LightState.On;
+            bathroom.Light = true;
             bathroom.DesiredTemperature = 18.5;
             res = await client.PutBathroom(bathroom);
             Debug.WriteLine(res);
