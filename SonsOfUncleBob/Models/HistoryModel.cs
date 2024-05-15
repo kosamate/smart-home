@@ -7,6 +7,7 @@ using SonsOfUncleBob.Models;
 using SonsOfUncleBob.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.Database
 {
@@ -34,10 +35,10 @@ namespace SonsOfUncleBob.Database
             DataProvider.NewMeasuredValues += NewMeasuredValues;
         }
 
-        private void NewMeasuredValues(List<RoomModel> updatedRooms)
+        private void NewMeasuredValues(object sender, RoomListEventArgs eventArgs)
         {
             foreach (RoomModel room in this.rooms)
-                foreach (RoomModel updatedRoom in updatedRooms)
+                foreach (RoomModel updatedRoom in eventArgs.Rooms)
                 {
                     if (room.Name == updatedRoom.Name)
                     {

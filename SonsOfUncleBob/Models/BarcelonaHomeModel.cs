@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.Models
 {
@@ -30,10 +31,10 @@ namespace SonsOfUncleBob.Models
         }
         public override List<RoomModel> Rooms => rooms;
 
-        private void updateMeasuredValues(List<RoomModel> updatedRooms)
+        private void updateMeasuredValues(object sender, RoomListEventArgs eventArgs)
         {
             foreach (RoomModel room in this.Rooms)
-                foreach (RoomModel updatedRoom in updatedRooms)
+                foreach (RoomModel updatedRoom in eventArgs.Rooms)
                 {
                     if (room.Name == updatedRoom.Name)
                     {
