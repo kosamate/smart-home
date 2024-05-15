@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SonsOfUncleBob.Http;
 using SonsOfUncleBob.Http.DTO;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.Models
 {
@@ -15,7 +16,8 @@ namespace SonsOfUncleBob.Models
         private static DataProvider instance = null;
         private static readonly object padlock = new object();
 
-        public static event NewMeasuredValuesDelegate NewMeasuredValues;
+        //public static event NewMeasuredValuesDelegate NewMeasuredValues;
+        public static event EventHandler<RoomListEventArgs> NewMeasuredValues;
 
         private Client client = new();
         private List<RoomModel> rooms = new();
@@ -37,6 +39,7 @@ namespace SonsOfUncleBob.Models
                     .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
                     .Build()
                 );
+            RoomModel.NewDesiredValues += updateDesiredValuesInServer;
             startListening();
         }
 
@@ -60,30 +63,26 @@ namespace SonsOfUncleBob.Models
         {
             while (true)
             {
-                var roomDTOs = await client.GetRoomsList();
-                var bathroomDTO = await client.GetBathroom();
-                updateRoomsValues(roomDTOs);
-                updateBathroomValues(bathroomDTO);
-                NewMeasuredValues?.Invoke(this.rooms);
+                updateRooms();
                 await Task.Delay(5000);
             }
         }
 
-        public async void updateDesiredValuesInServer(RoomModel room)
+        public async void updateDesiredValuesInServer(object sender, RoomEventArgs eventArgs)
         {
             RoomDTO roomDTO = new("", - 100, -100, true);
             BathroomDTO bathroomDTO = new("", -100, -100, true, -100, -100);
-            if (room.Signals.Count == 2)
+            if (eventArgs.Room.Signals.Count == 2)
             {
-                adjustBathoomDTOFromRoomModel(room, bathroomDTO);
+                adjustBathoomDTOFromRoomModel(eventArgs.Room, bathroomDTO);
                 await this.client.PutBathroom(bathroomDTO);
             }
             else
             {
-                adjustRoomDTOFromRoomModel(room, bathroomDTO);
+                adjustRoomDTOFromRoomModel(eventArgs.Room, roomDTO);
                 await this.client.PutRoom(roomDTO);
             }
-
+            updateRooms();
         }
 
         public async void updateDesiredValuesToDefault()
@@ -91,6 +90,16 @@ namespace SonsOfUncleBob.Models
             await this.client.DeleteRooms();
         }
 
+        private async void updateRooms()
+        {
+            var roomDTOs = await client.GetRoomsList();
+            var bathroomDTO = await client.GetBathroom();
+            updateRoomsValues(roomDTOs);
+            updateBathroomValues(bathroomDTO);
+            var eventArgs = new RoomListEventArgs();
+            eventArgs.Rooms = this.rooms;
+            NewMeasuredValues?.Invoke(this, eventArgs);
+        }
 
         private void adjustRoomDTOFromRoomModel(RoomModel room, RoomDTO roomDTO)
         {
@@ -147,7 +156,5 @@ namespace SonsOfUncleBob.Models
                     }
                 }
         }
-
-        public delegate void NewMeasuredValuesDelegate(List<RoomModel> roomlist);
     }
 }

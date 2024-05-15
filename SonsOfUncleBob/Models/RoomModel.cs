@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SonsOfUncleBob.Models.EventArguments;
+using SonsOfUncleBob.ViewModels;
 
 namespace SonsOfUncleBob.Models
 {
-    public class RoomModel
+    public class RoomModel : ObservableObject
     {
         //Plus Point: Builder design pattern
         public class RoomBuilder
@@ -41,13 +43,51 @@ namespace SonsOfUncleBob.Models
                 
                 return room;
             }
-
-
         }
-        public string Name { get; private set; }
-        public bool Light { get; set; }
 
-        public List<SignalModel> Signals { get; set; }
+        internal static event EventHandler<RoomEventArgs> NewDesiredValues;
+
+        public string Name { get; private set; }
+        
+        private bool light = false;
+        public bool Light {
+            get => light;
+            set
+            {
+                if(light != value)
+                {
+                    light = value;
+                    Notify();
+                    if(this.Signals.Count > 0)
+                    {
+                        RoomEventArgs eventArgs = new RoomEventArgs();
+                        eventArgs.Room = this;
+                        NewDesiredValues?.Invoke(this, eventArgs);
+                    }
+                }
+            }
+        }
+
+        private List<SignalModel> signals = new();
+        public List<SignalModel> Signals
+        {
+            get => signals;
+            set
+            {
+                if(signals != value)
+                {
+                    signals = value;
+                    Notify();
+                    if (signals.Count != 0)
+                    {
+                        RoomEventArgs eventArgs = new RoomEventArgs();
+                        eventArgs.Room = this;
+                        NewDesiredValues?.Invoke(this, eventArgs);
+                    }
+                }
+            }
+        }
+
         private RoomModel()
         {
 
