@@ -45,9 +45,9 @@ namespace SonsOfUncleBob.Models
 
         }
         public string Name { get; private set; }
-        public bool Light { get; private set; }
+        public bool Light { get; set; }
 
-        public List<SignalModel> Signals { get; private set; }
+        public List<SignalModel> Signals { get; set; }
         private RoomModel()
         {
 
