@@ -77,7 +77,6 @@ namespace SonsOfUncleBob.Models
                 if(signals != value)
                 {
                     signals = value;
-                    Notify();
                     if (signals.Count != 0)
                     {
                         RoomEventArgs eventArgs = new RoomEventArgs();
