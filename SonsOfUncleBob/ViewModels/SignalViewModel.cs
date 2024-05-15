@@ -12,8 +12,8 @@ namespace SonsOfUncleBob.ViewModels
         private SignalModel signal;
         private Dictionary<SignalModel.SignalCategory, Image> icons = new Dictionary<SignalModel.SignalCategory, Image>() 
         {
-            { SignalModel.SignalCategory.Temperature, new Image {Source="Resources/Images/temperature.png" } },
-            { SignalModel.SignalCategory.Humidity, new Image {Source="Resources/Images/humidity.png" } }
+            { SignalModel.SignalCategory.Temperature, new Image {Source="temperature.png" } },
+            { SignalModel.SignalCategory.Humidity, new Image {Source="humidity.png" } }
         };
 
 
@@ -24,6 +24,8 @@ namespace SonsOfUncleBob.ViewModels
 
         public string Name { get => signal.Name; }
         public string DesiredValueWithUnit { get => $"{signal.DesiredValue} {signal.UnitOfMeasure}"; }
+
+        public float? DesiredValue { get => signal.DesiredValue; }
         public float CurrentValue { get => signal.CurrentValue; }
         public string CurrentValueWithUnit { get => $"{signal.CurrentValue} {signal.UnitOfMeasure}"; }
         public Image Icon { get => icons[signal.Category]; }
