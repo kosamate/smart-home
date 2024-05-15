@@ -9,14 +9,51 @@ using SonsOfUncleBob.Http.DTO;
 
 namespace SonsOfUncleBob.Models
 {
-    internal class DataProvider
+    //Singleton
+    internal sealed class DataProvider
     {
-        private BarcelonaHomeModel home = new();
+        private static DataProvider instance = null;
+        private static readonly object padlock = new object();
+
+        public static event NewMeasuredValuesDelegate NewMeasuredValues;
+
         private Client client = new();
-        
-        public DataProvider()
+        private List<RoomModel> rooms = new();
+
+
+        DataProvider()
         {
+            foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
+                rooms.Add(
+                    new RoomModel.RoomBuilder()
+                    .SetName(roomName)
+                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
+                    .Build()
+                    );
+            rooms.Add(
+                new RoomModel.RoomBuilder()
+                    .SetName("Bathroom")
+                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
+                    .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
+                    .Build()
+                );
             startListening();
+        }
+
+
+        public static DataProvider Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new DataProvider();
+                    }
+                    return instance;
+                }
+            }
         }
 
         private async void startListening()
@@ -25,29 +62,58 @@ namespace SonsOfUncleBob.Models
             {
                 var roomDTOs = await client.GetRoomsList();
                 var bathroomDTO = await client.GetBathroom();
-                updateRoomValues(roomDTOs);
+                updateRoomsValues(roomDTOs);
                 updateBathroomValues(bathroomDTO);
-                string kitchenString = $"Kitchen:\n\tlight: {home.Rooms[0].Light}\n\ttemperature: {home.Rooms[0].Signals[0].CurrentValue}\n\t" +
-                    $"desired temperature: {home.Rooms[0].Signals[0].DesiredValue}\n";
-                string livingRoomString = $"Living room:\n\tlight: {home.Rooms[1].Light}\n\ttemperature: {home.Rooms[1].Signals[0].CurrentValue}\n\t" +
-                    $"desired temperature: {home.Rooms[1].Signals[0].DesiredValue}\n";
-                string bedroomString = $"Bedroom:\n\tlight: {home.Rooms[2].Light}\n\ttemperature: {home.Rooms[2].Signals[0].CurrentValue}\n\t" +
-                    $"desired temperature: {home.Rooms[2].Signals[0].DesiredValue}\n";
-                string bathroomString = $"Bathroom:\n\tlight: {home.Rooms[3].Light}\n\ttemperature: {home.Rooms[3].Signals[0].CurrentValue}\n\t" +
-                    $"desired temperature: {home.Rooms[3].Signals[0].DesiredValue}\n\thumidity: {home.Rooms[3].Signals[1].CurrentValue}\n\t" +
-                    $"desired humidity: {home.Rooms[3].Signals[1].DesiredValue}\n";
-                Debug.WriteLine(kitchenString);
-                Debug.WriteLine(livingRoomString);
-                Debug.WriteLine(bedroomString);
-                Debug.WriteLine(bathroomString);
+                NewMeasuredValues?.Invoke(this.rooms);
                 await Task.Delay(5000);
+            }
+        }
+
+        public async void updateDesiredValuesInServer(RoomModel room)
+        {
+            RoomDTO roomDTO = new("", - 100, -100, true);
+            BathroomDTO bathroomDTO = new("", -100, -100, true, -100, -100);
+            if (room.Signals.Count == 2)
+            {
+                adjustBathoomDTOFromRoomModel(room, bathroomDTO);
+                await this.client.PutBathroom(bathroomDTO);
+            }
+            else
+            {
+                adjustRoomDTOFromRoomModel(room, bathroomDTO);
+                await this.client.PutRoom(roomDTO);
             }
 
         }
 
-        private void updateRoomValues(List<RoomDTO> roomDTOList)
+        public async void updateDesiredValuesToDefault()
         {
-            foreach (RoomModel room in home.Rooms)
+            await this.client.DeleteRooms();
+        }
+
+
+        private void adjustRoomDTOFromRoomModel(RoomModel room, RoomDTO roomDTO)
+        {
+            roomDTO.Name = room.Name;
+            roomDTO.Temperature = room.Signals[0].CurrentValue;
+            roomDTO.DesiredTemperature = (float)room.Signals[0].DesiredValue;
+            roomDTO.Light = room.Light;
+        }
+
+        private void adjustBathoomDTOFromRoomModel(RoomModel bathroom, BathroomDTO bathroomDTO)
+        {
+            bathroomDTO.Name = bathroom.Name;
+            bathroomDTO.Temperature = bathroom.Signals[0].CurrentValue;
+            bathroomDTO.DesiredTemperature = (float)bathroom.Signals[0].DesiredValue;
+            bathroomDTO.Light = bathroom.Light;
+            bathroomDTO.Humidity = bathroom.Signals[1].CurrentValue;
+            bathroomDTO.DesiredHumidity = (float)bathroom.Signals[1].DesiredValue;
+        }
+
+
+        private void updateRoomsValues(List<RoomDTO> roomDTOList)
+        {
+            foreach (RoomModel room in this.rooms)
                 foreach (RoomDTO roomDTO in roomDTOList)
                     if (room.Name == roomDTO.Name) 
                     {
@@ -62,7 +128,7 @@ namespace SonsOfUncleBob.Models
 
         private void updateBathroomValues(BathroomDTO bathroomDTO)
         {
-            foreach (RoomModel room in home.Rooms)
+            foreach (RoomModel room in this.rooms)
                 if (room.Name == bathroomDTO.Name)
                 {
                     room.Light = bathroomDTO.Light;
@@ -81,5 +147,7 @@ namespace SonsOfUncleBob.Models
                     }
                 }
         }
+
+        public delegate void NewMeasuredValuesDelegate(List<RoomModel> roomlist);
     }
 }
