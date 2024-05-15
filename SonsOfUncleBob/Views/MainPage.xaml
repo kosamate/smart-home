@@ -20,16 +20,16 @@
 
                     <Label Text="Our House" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
-                    <HorizontalStackLayout HorizontalOptions="End">
+                    <HorizontalStackLayout Spacing="20" HorizontalOptions="End">
                         <!--Reset desired values-->
-                        <Label Text="Reset desired values:" FontSize="Default" Padding="20"/>
+                        <Label Text="Reset desired values:" VerticalTextAlignment="Center" FontSize="Default"/>
                         <Button Text="RESET" Command="{Binding resetCommand}"/>
                         <!--Switch between Data History and Room Information Contentviews-->
-                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <Label Text="Data History" FontSize="Default" HorizontalOptions="End" VerticalTextAlignment="Center" Padding="10" />
                         <AbsoluteLayout>
                             <Switch IsToggled ="{Binding IsInformationPageActive}" HorizontalOptions="End" AbsoluteLayout.LayoutBounds="0.7,0,40,35"/>
                         </AbsoluteLayout>
-                        <Label Text="Room Information" FontSize="Default" HorizontalOptions="End" Padding="10" />
+                        <Label Text="Room Information" FontSize="Default" VerticalTextAlignment="Center" HorizontalOptions="End" Padding="10" />
                     </HorizontalStackLayout>
                     
                     <!--Home layout-->

@@ -24,9 +24,12 @@ namespace SonsOfUncleBob.ViewModels
                 {
                     selectedRoom = value;
                     NotifyAll();
+                    NotifyAll(nameof(IsRoomSelected));
                 }
             }
         }
+
+        public bool IsRoomSelected { get => (selectedRoom == null ? false : true); }
         public ObservableCollection<RoomViewModel> RoomList { get => roomList; } 
         public bool IsVisible
         {
