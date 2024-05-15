@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using SonsOfUncleBob.Models;
+using SonsOfUncleBob.Commands;
 
 namespace SonsOfUncleBob.ViewModels
 {
@@ -15,6 +16,7 @@ namespace SonsOfUncleBob.ViewModels
         {
             InformationViewModel = informationViewModel;
             HistoryViewModel = historyViewModel;
+            resetCommand = new ResetCommand();
             foreach (RoomModel room in homeModel.Rooms)
             {
                 var roomviewModel = new RoomViewModel(room);
@@ -27,6 +29,7 @@ namespace SonsOfUncleBob.ViewModels
 
         private Page page { get; set; }
 
+        public ResetCommand resetCommand { get; set; }
   
         public bool IsInformationPageActive
         {
