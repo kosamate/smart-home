@@ -11,18 +11,18 @@ namespace SonsOfUncleBob.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool b = new();
+            string s = "";
 
-            if ((string)value == "On")
+            if ((bool)value == true)
             {
-                b = true;
+                s = "On";
             }
-            else if ((string)value == "On")
+            else if ((bool)value == false)
             {
-                b = false;
+                s = "Off";
             }
 
-            return b;
+            return s;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

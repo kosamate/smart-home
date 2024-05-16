@@ -25,7 +25,14 @@ namespace SonsOfUncleBob.ViewModels
         private RoomModel room;
         private List<SignalViewModel> signals = new List<SignalViewModel>();
         public string Name { get => room.Name; }
-        public string Light { get => room.Light ? "On" : "Off";}
+        public bool Light 
+        { 
+            get => room.Light; 
+            set 
+            {  
+                room.Light = value; 
+            } 
+        }
         public string SignalSummary
         {
             get {
