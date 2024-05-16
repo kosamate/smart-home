@@ -3,8 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SonsOfUncleBob.Views.Information"
              xmlns:Views="clr-namespace:SonsOfUncleBob.Views"
-             xmlns:VM="clr-namespace:SonsOfUncleBob.ViewModels">
-    
+             xmlns:VM="clr-namespace:SonsOfUncleBob.ViewModels"
+             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters">
+
+    <ContentView.Resources>
+        <Converters:LightOnOfftoBoolConverter x:Key ="LightOnOfftoBoolConverter"/>
+    </ContentView.Resources>
+
     <VerticalStackLayout Spacing="30">
         <Label Text="Room Information" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
@@ -14,9 +19,9 @@
 
         <HorizontalStackLayout Spacing="50" HorizontalOptions="Center">
             <Image Source="lamp.png" WidthRequest="60" HeightRequest="60" IsVisible="{Binding IsRoomSelected}"/>
-            <Label Text="{Binding SelectedRoom.Light}" FontSize="Medium" VerticalTextAlignment="Center"/>
+            <Label Text="{Binding SelectedRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Medium" VerticalTextAlignment="Center"/>
             <AbsoluteLayout VerticalOptions="Center">
-                <Switch IsToggled ="{Binding IsInformationPageActive}" IsVisible="{Binding IsRoomSelected}"
+                <Switch IsToggled ="{Binding SelectedRoom.Light}" IsVisible="{Binding IsRoomSelected}" 
                         HorizontalOptions="End" Scale="1.5"  AbsoluteLayout.LayoutBounds="60,0,40,35"/>
             </AbsoluteLayout>
         </HorizontalStackLayout>
@@ -28,7 +33,7 @@
                         <Image Source="{Binding Icon.Source}" WidthRequest="60" HeightRequest="60"/>
                         <Label Text="{Binding Name}" VerticalTextAlignment="Center" FontSize="Medium" />
                         <Label Text="{Binding CurrentValueWithUnit}" VerticalTextAlignment="Center" FontSize="Medium"/>
-                        <Entry Text="{Binding DesiredValue, Mode=OneWay}" Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
+                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

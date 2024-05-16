@@ -4,12 +4,11 @@
              x:Class="SonsOfUncleBob.MainPage"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:drawable="clr-namespace:SonsOfUncleBob"
-             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters"
-             xmlns:Views="clr-namespace:SonsOfUncleBob.Views">
+             xmlns:Views="clr-namespace:SonsOfUncleBob.Views"
+             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters">
 
     <ContentPage.Resources>
-        <!--<drawable:GraphicsDrawable x:Key="drawable" />-->
-        <Converters:NegateConverter x:Key ="NegateConverter"/>
+        <Converters:LightOnOfftoBoolConverter x:Key ="LightOnOfftoBoolConverter"/>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -57,7 +56,7 @@
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1"  Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="2">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding Kitchen.Light}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding Kitchen.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -71,7 +70,7 @@
                             <VerticalStackLayout Grid.Row="1" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5" >
                                     <Label Text="Light: " FontSize="Default" TextColor="White" />
-                                    <Label Text="{Binding BathRoom.Light}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BathRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -85,7 +84,7 @@
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding LivingRoom.Light}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding LivingRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -99,7 +98,7 @@
                             <VerticalStackLayout Grid.Row="2" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding BedRoom.Light}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding BedRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
