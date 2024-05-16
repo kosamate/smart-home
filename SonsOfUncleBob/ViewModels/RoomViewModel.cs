@@ -17,15 +17,15 @@ namespace SonsOfUncleBob.ViewModels
                 signals.Add(new SignalViewModel(signal));
                 
             foreach (SignalViewModel signalViewModels in signals)
-                signalViewModels.PropertyChanged += SignalViewModelChanged;
+                signalViewModels.PropertyChanged += ModelOrSignalViewModelsChanged;
 
-            room.PropertyChanged += ModelChanged;
+            room.PropertyChanged += ModelOrSignalViewModelsChanged;
         }
 
         private RoomModel room;
         private List<SignalViewModel> signals = new List<SignalViewModel>();
         public string Name { get => room.Name; }
-        public string Light { get => room.Light ? "On" : "Off"; }
+        public string Light { get => room.Light ? "On" : "Off";}
         public string SignalSummary
         {
             get {
@@ -37,15 +37,11 @@ namespace SonsOfUncleBob.ViewModels
         }
         public List<SignalViewModel> Signals { get => signals; }
 
-        public void ModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public void ModelOrSignalViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Notify(e.PropertyName);
+            if (e.PropertyName != nameof(Light))
+                Notify(nameof(SignalSummary));
         }
-
-        public void SignalViewModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            Notify(nameof(SignalSummary));
-        }
-
     }
 }

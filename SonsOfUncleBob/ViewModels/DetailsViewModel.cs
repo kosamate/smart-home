@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SonsOfUncleBob.ViewModels
         {
             viewModels.Add(this);
             roomList.CollectionChanged += RoomListChanged;
+            
         }
         public RoomViewModel? SelectedRoom
         {
@@ -22,7 +24,11 @@ namespace SonsOfUncleBob.ViewModels
             {
                 if (value != selectedRoom)
                 {
+                    if (selectedRoom != null)
+                        selectedRoom.PropertyChanged -= PropertyViewModelsChanged;
                     selectedRoom = value;
+                    if (selectedRoom != null)
+                        selectedRoom.PropertyChanged += PropertyViewModelsChanged;
                     NotifyAll();
                     NotifyAll(nameof(IsRoomSelected));
                 }
@@ -63,6 +69,10 @@ namespace SonsOfUncleBob.ViewModels
                 viewModel.Notify(propertyName);
         }
 
+        public void PropertyViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Notify(e.PropertyName);
+        }
 
     }
 }

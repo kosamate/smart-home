@@ -27,7 +27,7 @@ namespace SonsOfUncleBob.ViewModels
             }
 
             foreach (RoomViewModel roomViewModel in this.Rooms)
-                roomViewModel.PropertyChanged += PropertyViewModelsChanged;
+                roomViewModel.PropertyChanged += ViewModelsChanged;
 
             IsInformationPageActive = true;
         }
@@ -58,7 +58,7 @@ namespace SonsOfUncleBob.ViewModels
         public RoomViewModel BedRoom { get => Rooms.Where(r => r.Name == "Bedroom").First(); }
         public RoomViewModel BathRoom { get => Rooms.Where(r => r.Name == "Bathroom").First(); }
 
-        public void PropertyViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public void ViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Notify(e.PropertyName);
         }
