@@ -24,17 +24,35 @@ namespace SonsOfUncleBob.ViewModels
             signal.PropertyChanged += ModelChanged;
         }
 
-        public string Name { get => signal.Name; }
+        public string Name { get => signal.Name;}
         public string DesiredValueWithUnit { get => $"{signal.DesiredValue} {signal.UnitOfMeasure}"; }
 
-        public float? DesiredValue { get => signal.DesiredValue; }
-        public float CurrentValue { get => signal.CurrentValue; }
+        public float? DesiredValue {
+            get => signal.DesiredValue;
+            set
+            {
+                signal.DesiredValue = value;
+            }
+        }
+
+        public float CurrentValue {
+            get => signal.CurrentValue;
+            set
+            {
+                signal.CurrentValue = value;
+            }
+        }
+        
         public string CurrentValueWithUnit { get => $"{signal.CurrentValue} {signal.UnitOfMeasure}"; }
         public Image Icon { get => icons[signal.Category]; }
 
         public void ModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Notify(e.PropertyName);
+            if (e.PropertyName == nameof(DesiredValue))
+                Notify(nameof(DesiredValueWithUnit));
+            if(e.PropertyName == nameof(CurrentValue))
+                Notify(nameof(CurrentValueWithUnit));
         }
     }
 }
