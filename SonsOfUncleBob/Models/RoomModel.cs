@@ -45,8 +45,6 @@ namespace SonsOfUncleBob.Models
             }
         }
 
-        internal static event EventHandler<RoomEventArgs> NewDesiredValues;
-
         public string Name { get; private set; }
         
         private bool light = false;
@@ -58,34 +56,11 @@ namespace SonsOfUncleBob.Models
                 {
                     light = value;
                     Notify();
-                    if(this.Signals.Count > 0)
-                    {
-                        RoomEventArgs eventArgs = new RoomEventArgs();
-                        eventArgs.Room = this;
-                        NewDesiredValues?.Invoke(this, eventArgs);
-                    }
                 }
             }
         }
 
-        private List<SignalModel> signals = new();
-        public List<SignalModel> Signals
-        {
-            get => signals;
-            set
-            {
-                if(signals != value)
-                {
-                    signals = value;
-                    if (signals.Count != 0)
-                    {
-                        RoomEventArgs eventArgs = new RoomEventArgs();
-                        eventArgs.Room = this;
-                        NewDesiredValues?.Invoke(this, eventArgs);
-                    }
-                }
-            }
-        }
+        public List<SignalModel> Signals { get;  set; }
 
         private RoomModel()
         {

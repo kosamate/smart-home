@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SonsOfUncleBob.Models;
 using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.ViewModels
 {
@@ -22,6 +23,8 @@ namespace SonsOfUncleBob.ViewModels
             room.PropertyChanged += ModelOrSignalViewModelsChanged;
         }
 
+        internal static event EventHandler<RoomEventArgs> NewDesiredValues;
+
         private RoomModel room;
         private List<SignalViewModel> signals = new List<SignalViewModel>();
         public string Name { get => room.Name; }
@@ -30,7 +33,14 @@ namespace SonsOfUncleBob.ViewModels
             get => room.Light; 
             set 
             {  
-                room.Light = value; 
+                room.Light = value;
+                //Updating it in the server aswell.
+                if (this.Signals[0].DesiredValue != null)
+                {
+                    RoomEventArgs eventArgs = new RoomEventArgs();
+                    eventArgs.Room = this.room;
+                    NewDesiredValues?.Invoke(this, eventArgs);
+                }
             } 
         }
         public string SignalSummary
@@ -49,6 +59,17 @@ namespace SonsOfUncleBob.ViewModels
             Notify(e.PropertyName);
             if (e.PropertyName != nameof(Light))
                 Notify(nameof(SignalSummary));
+
+            //If the desired value changed, it is needed to be updated in the server aswell.
+            if(e.PropertyName == "DesiredValue")
+            {
+                if (this.Signals[0].DesiredValue != null)
+                {
+                    RoomEventArgs eventArgs = new RoomEventArgs();
+                    eventArgs.Room = this.room;
+                    NewDesiredValues?.Invoke(this, eventArgs);
+                }
+            }
         }
     }
 }
