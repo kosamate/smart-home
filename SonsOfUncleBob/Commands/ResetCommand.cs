@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using SonsOfUncleBob.Models;
 
 namespace SonsOfUncleBob.Commands
 {
@@ -21,7 +22,7 @@ namespace SonsOfUncleBob.Commands
 
         public void Execute(object parameter)
         {
-            Debug.WriteLine("Reset command successful");
+            DataProvider.Instance.updateDesiredValuesToDefault();
         }
 
 

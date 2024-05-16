@@ -43,7 +43,8 @@ namespace SonsOfUncleBob.ViewModels
             }
         }
         
-        public string CurrentValueWithUnit { get => $"{signal.CurrentValue} {signal.UnitOfMeasure}"; }
+        public string CurrentValueWithUnit { get => $"{signal.CurrentValue:0.00} {signal.UnitOfMeasure}"; }
+
         public Image Icon { get => icons[signal.Category]; }
 
         public void ModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
