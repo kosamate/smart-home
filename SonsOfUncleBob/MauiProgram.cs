@@ -31,7 +31,9 @@ namespace SonsOfUncleBob
 
 
 #endif
-            var a = Program_main.Main();
+
+            DataProvider dataProvider = DataProvider.Instance;
+
             return builder.Build();
         }
 

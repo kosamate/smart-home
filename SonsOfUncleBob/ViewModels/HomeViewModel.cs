@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using SonsOfUncleBob.Models;
 using SonsOfUncleBob.Commands;
+using System.Diagnostics;
 
 namespace SonsOfUncleBob.ViewModels
 {
@@ -17,12 +18,16 @@ namespace SonsOfUncleBob.ViewModels
             InformationViewModel = informationViewModel;
             HistoryViewModel = historyViewModel;
             resetCommand = new ResetCommand();
+
             foreach (RoomModel room in homeModel.Rooms)
             {
                 var roomviewModel = new RoomViewModel(room);
                 Rooms.Add(roomviewModel);
                 DetailsViewModel.AddToRoomList(roomviewModel);
             }
+
+            foreach (RoomViewModel roomViewModel in this.Rooms)
+                roomViewModel.PropertyChanged += ViewModelsChanged;
 
             IsInformationPageActive = true;
         }
@@ -52,6 +57,11 @@ namespace SonsOfUncleBob.ViewModels
         public RoomViewModel LivingRoom { get => Rooms.Where(r => r.Name == "Living Room").First(); }
         public RoomViewModel BedRoom { get => Rooms.Where(r => r.Name == "Bedroom").First(); }
         public RoomViewModel BathRoom { get => Rooms.Where(r => r.Name == "Bathroom").First(); }
+
+        public void ViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Notify(e.PropertyName);
+        }
     }
 
     public enum Page { Information, History }

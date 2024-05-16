@@ -6,16 +6,52 @@ using System.Threading.Tasks;
 using SonsOfUncleBob.Models;
 using SonsOfUncleBob.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.Database
 {
     public class HistoryModel
     {
         private readonly HistoryDbContext dbContext = new();
+        private List<RoomModel> rooms = new();
 
         public HistoryModel()
         {
-            //HttpDataProvider.Instance.DataReceived += DataReceived;
+            foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
+                rooms.Add(
+                    new RoomModel.RoomBuilder()
+                    .SetName(roomName)
+                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
+                    .Build()
+                    );
+            rooms.Add(
+                new RoomModel.RoomBuilder()
+                    .SetName("Bathroom")
+                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
+                    .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
+                    .Build()
+                );
+            DataProvider.NewMeasuredValues += NewMeasuredValues;
+        }
+
+        private void NewMeasuredValues(object sender, RoomListEventArgs eventArgs)
+        {
+            foreach (RoomModel room in this.rooms)
+                foreach (RoomModel updatedRoom in eventArgs.Rooms)
+                {
+                    if (room.Name == updatedRoom.Name)
+                    {
+                        room.Light = updatedRoom.Light;
+                        foreach (SignalModel signal in room.Signals)
+                            foreach (SignalModel updatedSignal in updatedRoom.Signals)
+                                if (signal.Category == updatedSignal.Category)
+                                {
+                                    signal.CurrentValue = updatedSignal.CurrentValue;
+                                    signal.DesiredValue = updatedSignal.DesiredValue;
+                                }
+                    }
+                }
         }
 
         public IEnumerable<KeyValuePair<DateTime, float>> GetSignalHistory(string roomName, string signalName, DateTime from, DateTime to)
@@ -25,13 +61,6 @@ namespace SonsOfUncleBob.Database
                 .Where(s => s.Room.Name == roomName && s.Type.Name == signalName && s.Timestamp > from && s.Timestamp < to)
                 .Select(s => new KeyValuePair<DateTime, float>(s.Timestamp, s.Value))
                 .OrderBy(pair => pair.Key);
-        }
-
-        private void DataReceived(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-            var result = AddSignalRecord("", "", "", DateTime.Now, 1.0f);
-            result.Wait();
         }
 
         private async Task AddSignalRecord(string roomName, string signalName, string unitOfMeasure, DateTime timestamp, float signalValue)

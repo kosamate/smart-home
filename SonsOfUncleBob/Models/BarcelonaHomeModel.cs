@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.Models
 {
     public class BarcelonaHomeModel : HomeModel
-    {
+    {        
         private List<RoomModel> rooms = new();
         public BarcelonaHomeModel()
         {
@@ -25,7 +27,28 @@ namespace SonsOfUncleBob.Models
                     .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
                     .Build()
                 );
+            DataProvider.NewMeasuredValues += updateMeasuredValues;
         }
         public override List<RoomModel> Rooms => rooms;
+
+        private void updateMeasuredValues(object sender, RoomListEventArgs eventArgs)
+        {
+            foreach (RoomModel room in this.Rooms)
+                foreach (RoomModel updatedRoom in eventArgs.Rooms)
+                {
+                    if (room.Name == updatedRoom.Name)
+                    {
+                        room.Light = updatedRoom.Light;
+                        foreach (SignalModel signal in room.Signals)
+                            foreach (SignalModel updatedSignal in updatedRoom.Signals)
+                                if (signal.Category == updatedSignal.Category)
+                                {
+                                    signal.CurrentValue = updatedSignal.CurrentValue;
+                                    signal.DesiredValue = updatedSignal.DesiredValue;
+                                }
+                    }
+                }
+        }
+
     }
 }
