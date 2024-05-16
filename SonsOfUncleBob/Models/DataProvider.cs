@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SonsOfUncleBob.Http;
 using SonsOfUncleBob.Http.DTO;
 using SonsOfUncleBob.Models.EventArguments;
+using SonsOfUncleBob.ViewModels;
 
 namespace SonsOfUncleBob.Models
 {
@@ -39,7 +40,7 @@ namespace SonsOfUncleBob.Models
                     .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
                     .Build()
                 );
-            RoomModel.NewDesiredValues += updateDesiredValuesInServer;
+            RoomViewModel.NewDesiredValues += updateDesiredValuesInServer;
             startListening();
         }
 
@@ -72,17 +73,19 @@ namespace SonsOfUncleBob.Models
         {
             RoomDTO roomDTO = new("", - 100, -100, true);
             BathroomDTO bathroomDTO = new("", -100, -100, true, -100, -100);
-            if (eventArgs.Room.Signals.Count == 2)
+            if (eventArgs.Room.Signals[0].DesiredValue != null)
             {
-                adjustBathoomDTOFromRoomModel(eventArgs.Room, bathroomDTO);
-                await this.client.PutBathroom(bathroomDTO);
+                if (eventArgs.Room.Signals.Count == 2)
+                {
+                    adjustBathoomDTOFromRoomModel(eventArgs.Room, bathroomDTO);
+                    await this.client.PutBathroom(bathroomDTO);
+                }
+                else
+                {
+                    adjustRoomDTOFromRoomModel(eventArgs.Room, roomDTO);
+                    await this.client.PutRoom(roomDTO);
+                }
             }
-            else
-            {
-                adjustRoomDTOFromRoomModel(eventArgs.Room, roomDTO);
-                await this.client.PutRoom(roomDTO);
-            }
-            updateRooms();
         }
 
         public async void updateDesiredValuesToDefault()
@@ -103,20 +106,26 @@ namespace SonsOfUncleBob.Models
 
         private void adjustRoomDTOFromRoomModel(RoomModel room, RoomDTO roomDTO)
         {
-            roomDTO.Name = room.Name;
-            roomDTO.Temperature = room.Signals[0].CurrentValue;
-            roomDTO.DesiredTemperature = (float)room.Signals[0].DesiredValue;
-            roomDTO.Light = room.Light;
+            if (room.Signals[0].DesiredValue != null)
+            {
+                roomDTO.Name = room.Name;
+                roomDTO.Temperature = room.Signals[0].CurrentValue;
+                roomDTO.DesiredTemperature = (float)room.Signals[0].DesiredValue;
+                roomDTO.Light = room.Light;
+            }
         }
 
         private void adjustBathoomDTOFromRoomModel(RoomModel bathroom, BathroomDTO bathroomDTO)
         {
-            bathroomDTO.Name = bathroom.Name;
-            bathroomDTO.Temperature = bathroom.Signals[0].CurrentValue;
-            bathroomDTO.DesiredTemperature = (float)bathroom.Signals[0].DesiredValue;
-            bathroomDTO.Light = bathroom.Light;
-            bathroomDTO.Humidity = bathroom.Signals[1].CurrentValue;
-            bathroomDTO.DesiredHumidity = (float)bathroom.Signals[1].DesiredValue;
+            if ((bathroom.Signals[0].DesiredValue != null) && (bathroom.Signals[1].DesiredValue != null))
+            {
+                bathroomDTO.Name = bathroom.Name;
+                bathroomDTO.Temperature = bathroom.Signals[0].CurrentValue;
+                bathroomDTO.DesiredTemperature = (float)bathroom.Signals[0].DesiredValue;
+                bathroomDTO.Light = bathroom.Light;
+                bathroomDTO.Humidity = bathroom.Signals[1].CurrentValue;
+                bathroomDTO.DesiredHumidity = (float)bathroom.Signals[1].DesiredValue;
+            }
         }
 
 
