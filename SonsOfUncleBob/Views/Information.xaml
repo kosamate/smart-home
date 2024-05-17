@@ -33,7 +33,8 @@
                         <Image Source="{Binding Icon.Source}" WidthRequest="60" HeightRequest="60"/>
                         <Label Text="{Binding Name}" VerticalTextAlignment="Center" FontSize="Medium" />
                         <Label Text="{Binding CurrentValueWithUnit}" VerticalTextAlignment="Center" FontSize="Medium"/>
-                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
+                        <Label Text="Desired value: " VerticalTextAlignment="Center" FontSize="Medium" />
+                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Center" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
                     </HorizontalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

@@ -13,7 +13,7 @@
                 SelectedItem="{Binding SelectedRoom, Mode=TwoWay}" ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}">
         </Picker>
 
-        <micro:ChartView x:Name="chartView" HeightRequest="480" />
+        <micro:ChartView x:Name="chartView" HeightRequest="455" />
 
 
     </VerticalStackLayout>
