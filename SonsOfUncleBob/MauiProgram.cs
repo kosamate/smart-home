@@ -3,6 +3,7 @@ using SonsOfUncleBob.ViewModels;
 using Microcharts.Maui;
 using SonsOfUncleBob.Models;
 using SonsOfUncleBob.Database;
+using SonsOfUncleBob.Http;
 
 namespace SonsOfUncleBob
 {

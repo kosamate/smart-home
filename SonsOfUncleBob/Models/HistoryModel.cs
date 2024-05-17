@@ -8,6 +8,7 @@ using SonsOfUncleBob.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using SonsOfUncleBob.Models.EventArguments;
+using SonsOfUncleBob.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace SonsOfUncleBob.Database

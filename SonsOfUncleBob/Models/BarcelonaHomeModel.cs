@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using SonsOfUncleBob.Models.EventArguments;
+using SonsOfUncleBob.Http;
 
 namespace SonsOfUncleBob.Models
 {
