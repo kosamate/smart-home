@@ -1,7 +1,6 @@
-﻿
-namespace Server.Http.DTO
+﻿namespace Common.DTO
 {
-    internal class BathroomDTO : RoomDTO
+    public class BathroomDTO : RoomDTO
     {
         public double Humidity { get; set; }
         public double DesiredHumidity { get; set; }

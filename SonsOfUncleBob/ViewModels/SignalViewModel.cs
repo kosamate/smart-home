@@ -28,7 +28,7 @@ namespace SonsOfUncleBob.ViewModels
         public string DesiredValueWithUnit { get => $"{signal.DesiredValue} {signal.UnitOfMeasure}"; }
 
         public float? DesiredValue {
-            get => signal.DesiredValue;
+            get => (signal.DesiredValue == null) ? (float)0.0 : (float)signal.DesiredValue;
             set
             {
                 signal.DesiredValue = value;
@@ -49,11 +49,14 @@ namespace SonsOfUncleBob.ViewModels
 
         public void ModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Notify(e.PropertyName);
-            if (e.PropertyName == nameof(DesiredValue))
-                Notify(nameof(DesiredValueWithUnit));
-            if(e.PropertyName == nameof(CurrentValue))
-                Notify(nameof(CurrentValueWithUnit));
+            if (e.PropertyName != null)
+            {
+                Notify(e.PropertyName);
+                if (e.PropertyName == nameof(DesiredValue))
+                    Notify(nameof(DesiredValueWithUnit));
+                if (e.PropertyName == nameof(CurrentValue))
+                    Notify(nameof(CurrentValueWithUnit));
+            }
         }
     }
 }

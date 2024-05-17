@@ -1,9 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Net;
-using Server.Http.DTO;
 using Server.Models;
-using Server.Models.Supporters;
+using Server.Http.DTO;
+using Common.DTO;
+using Common.Defaults;
 
 namespace Server.Http.Listener
 {
@@ -27,7 +28,7 @@ namespace Server.Http.Listener
             Listener.Prefixes.Add(roomUri);
             Listener.Prefixes.Add(bathroomUri);
             this.RealHouse.updateDesiredValues(this.HouseDTO);
-            this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            this.HouseDTO.UpdateMeasuredValues(this.RealHouse);
         }
 
         public async Task HandlerMethod(HttpListenerContext context)
@@ -62,7 +63,7 @@ namespace Server.Http.Listener
             
             if (roomDTO != null)
             {
-                this.HouseDTO.updateRoom(roomDTO);
+                this.HouseDTO.UpdateRoom(roomDTO);
                 this.RealHouse.updateDesiredValues(this.HouseDTO);
                 await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {roomDTO.Name}.\n");
             }
@@ -85,7 +86,7 @@ namespace Server.Http.Listener
 
         private async Task HandleRoomsGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
-            this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            this.HouseDTO.UpdateMeasuredValues(this.RealHouse);
             List<RoomDTO> rooms = new List<RoomDTO>();
             foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
                 if (!(roomDTO is BathroomDTO)) 
@@ -102,7 +103,7 @@ namespace Server.Http.Listener
             
             if (bathroomDTO != null)
             {
-                this.HouseDTO.updateRoom(bathroomDTO);
+                this.HouseDTO.UpdateRoom(bathroomDTO);
                 this.RealHouse.updateDesiredValues(this.HouseDTO);
                 await BuildResponse(resp, req.ContentEncoding, $"Updated the desired values in the {bathroomDTO.Name}.\n");
             }
@@ -110,7 +111,7 @@ namespace Server.Http.Listener
 
         private async Task HandleBathroomGet(HttpListenerRequest req, HttpListenerResponse resp)
         {
-            this.HouseDTO.updateMeasuredValues(this.RealHouse);
+            this.HouseDTO.UpdateMeasuredValues(this.RealHouse);
             foreach (RoomDTO roomDTO in this.HouseDTO.Rooms)
                 if (roomDTO is BathroomDTO)
                 {
