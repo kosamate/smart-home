@@ -1,37 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OxyPlot;
-using OxyPlot.Series;
+﻿using Microcharts;
+using SkiaSharp;
 using SonsOfUncleBob.Database;
+using System.Runtime.CompilerServices;
 
 namespace SonsOfUncleBob.ViewModels
 {
     public class HistoryViewModel : DetailsViewModel
     {
+        readonly SKColor POINT_COLOR = new SKColor(6, 57, 112);
+        readonly SKColor BACKGROUND_COLOR = new SKColor(171, 219, 227);
         public HistoryViewModel(HistoryModel historyModel)
         {
             this.historyModel = historyModel;
+            historyModel.PropertyChanged += HistoryModel_PropertyChanged;
             SelectedSignal = SelectedRoom?.Signals.FirstOrDefault();
-            SignalPlotModel = new PlotModel();
-            UpdatePlotModel();
         }
+
+        private void HistoryModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "History")
+                UpdateChart();
+        }
+
+        protected override void Notify([CallerMemberName] string propertyName = "")
+        {
+            if (propertyName == nameof(IsVisible) && IsVisible)
+            {
+                UpdateChart();
+            }
+            if (propertyName == nameof(SelectedRoom))
+            {
+                SelectedSignal = SelectedRoom.Signals.First();
+                UpdateChart();
+            }
+            base.Notify(propertyName);
+        }
+
 
         private HistoryModel historyModel;
 
-        private DateTime startDate = DateTime.Now.AddDays(-1);
+        private DateTime startDate = DateTime.Now.AddHours(-1);
         public DateTime StartDate
         {
             get => startDate;
-            set 
+            set
             {
                 if (value != startDate)
                 {
                     startDate = value;
                     Notify();
-                    UpdatePlotModel();
+                    UpdateChart();
                 }
             }
         }
@@ -45,7 +63,7 @@ namespace SonsOfUncleBob.ViewModels
                 {
                     endDate = value;
                     Notify();
-                    UpdatePlotModel();
+                    UpdateChart();
                 }
             }
         }
@@ -53,52 +71,61 @@ namespace SonsOfUncleBob.ViewModels
         public List<SignalViewModel>? Signals { get => SelectedRoom?.Signals; }
 
         private SignalViewModel? selectedSignal;
-        public SignalViewModel? SelectedSignal { 
+        public SignalViewModel? SelectedSignal
+        {
             get => selectedSignal;
-            set 
-            { 
+            set
+            {
                 if (value != selectedSignal)
                 {
                     selectedSignal = value;
                     Notify();
+                    UpdateChart();
                 }
             }
         }
 
-        public PlotModel SignalPlotModel { get; private set; }
+        public LineChart? Chart { get; private set; }
 
-        private void UpdatePlotModel()
+        private void UpdateChart()
         {
-            SignalPlotModel.Title = SelectedRoom?.Name;
-            SignalPlotModel.Series.Clear();
+            var dataPoints = GetDataPoints();
+            if (dataPoints.Length == 0)
+                return;
 
-            LineSeries lineserie = new LineSeries
-            {
-                ItemsSource = GetDummyDataPoints(),
-                DataFieldX = "Time",
-                DataFieldY = SelectedSignal?.Name,
-                StrokeThickness = 2,
-                MarkerSize = 0,
-                LineStyle = LineStyle.Solid,
-                Color = OxyColors.White,
-                MarkerType = MarkerType.Circle,
-            };
+            if (Chart == null)
+                this.Chart = new LineChart
+                {
+                    Entries = dataPoints,
+                    LineMode = LineMode.Straight,
+                    PointSize = 4f,
+                    BackgroundColor = BACKGROUND_COLOR,
+                    IsAnimated = false,
+                    LabelOrientation = Orientation.Horizontal,
+                };
+            else
+                (Chart as LineChart).Entries = dataPoints;
 
-            SignalPlotModel.Series.Add(lineserie);
-            Notify(nameof(SignalPlotModel));
+            Notify(nameof(Chart));
         }
 
-        private IEnumerable<DataPoint> GetDataPoints()
+        private ChartEntry[] GetDataPoints()
         {
-            foreach (var point in historyModel.GetSignalHistory(SelectedRoom.Name, SelectedSignal.Name, StartDate, EndDate))
+            List<ChartEntry> dataPoints = new List<ChartEntry>();
+            if (SelectedRoom == null || SelectedSignal == null)
+                return [];
+
+            var points = historyModel.GetSignalHistory(SelectedRoom.Name, SelectedSignal.Name, StartDate, DateTime.Now).ToArray(); // TODO chnges this if have a final idea for HistoryView
+            if (points == null || points.Length == 0)
+                return [];
+
+            for (int i = 0; i < points.Length; i++)
             {
-                double time = (point.Key - StartDate).TotalMinutes;
-                yield return new DataPoint(time, point.Value);
+                    dataPoints.Add(new ChartEntry(points[i].Value) { Color = POINT_COLOR });
             }
+
+            return dataPoints.ToArray();
         }
-        private IEnumerable<DataPoint> GetDummyDataPoints()
-        {
-            return new DataPoint[] { new DataPoint(1, 1), new DataPoint(2, 2), new DataPoint(3, 4), new DataPoint(4, 8) };
-        }
+
     }
 }

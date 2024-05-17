@@ -24,53 +24,45 @@ namespace SonsOfUncleBob.Database
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+            => options.UseInMemoryDatabase("history"); //.UseSqlite($"Data Source={DbPath}");
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SignalRecord>().HasKey(sr  => sr.Id);
+            modelBuilder.Entity<SignalType>().HasKey(st => st.Id);
+            modelBuilder.Entity<Room>().HasKey(r => r.Id);
+
+        }
     }
 
     public class SignalRecord
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
-        public Guid Id { get; private init; }
-        public Room Room { get; private set; }
-        public SignalType Type { get; private set; }
-        public DateTime Timestamp { get; private set; }
-        public float Value { get; private set; }
+        public int Id { get; set; }
+        public Room? Room { get; set; }
+        public SignalType? Type { get; set; }
+        public DateTime Timestamp { get; set; }
+        public float Value { get;set; }
 
-        public SignalRecord(Room room, SignalType type, DateTime timestamp, float v)
-        {
-            Id = Guid.NewGuid();
-            Room = room;
-            Type = type;
-            Timestamp = timestamp;
-            Value = v;
-        }
 
     }
 
     public class Room
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
-        public Guid Id { get; private init; }
-        public string Name { get; private set; }
-        public Room(string name)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-        }
+        public int Id { get; set; }
+        public string? Name { get; set; }
     }
 
     public class SignalType
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
-        public Guid Id { get; private init; }
-        public string Name { get; private set; }
-        public string UnitOfMeasure { get; private set; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? UnitOfMeasure { get; set; }
 
-        public SignalType(string name, string unitOfMeasure)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            UnitOfMeasure = unitOfMeasure;
-        }
     }
 }

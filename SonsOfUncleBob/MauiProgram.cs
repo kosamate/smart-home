@@ -24,6 +24,7 @@ namespace SonsOfUncleBob
             builder.AddModels();
             builder.AddViewModels();
             builder.AddView();
+            builder.Services.AddDbContext<HistoryDbContext>();
 
 
 #if DEBUG

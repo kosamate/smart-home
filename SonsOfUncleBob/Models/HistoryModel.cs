@@ -8,50 +8,32 @@ using SonsOfUncleBob.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using SonsOfUncleBob.Models.EventArguments;
+using System.ComponentModel.DataAnnotations;
 
 namespace SonsOfUncleBob.Database
 {
-    public class HistoryModel
+    public class HistoryModel: ObservableObject
     {
         private readonly HistoryDbContext dbContext = new();
-        private List<RoomModel> rooms = new();
 
         public HistoryModel()
         {
-            foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
-                rooms.Add(
-                    new RoomModel.RoomBuilder()
-                    .SetName(roomName)
-                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
-                    .Build()
-                    );
-            rooms.Add(
-                new RoomModel.RoomBuilder()
-                    .SetName("Bathroom")
-                    .AddSignal(new SignalModel("Temperature", "C°", SignalModel.SignalCategory.Temperature))
-                    .AddSignal(new SignalModel("Humidity", "%", SignalModel.SignalCategory.Humidity))
-                    .Build()
-                );
+        
             DataProvider.NewMeasuredValues += NewMeasuredValues;
         }
 
-        private void NewMeasuredValues(object sender, RoomListEventArgs eventArgs)
+        private void NewMeasuredValues(object? sender, RoomListEventArgs eventArgs)
         {
-            foreach (RoomModel room in this.rooms)
-                foreach (RoomModel updatedRoom in eventArgs.Rooms)
-                {
-                    if (room.Name == updatedRoom.Name)
-                    {
-                        room.Light = updatedRoom.Light;
-                        foreach (SignalModel signal in room.Signals)
-                            foreach (SignalModel updatedSignal in updatedRoom.Signals)
-                                if (signal.Category == updatedSignal.Category)
-                                {
-                                    signal.CurrentValue = updatedSignal.CurrentValue;
-                                    signal.DesiredValue = updatedSignal.DesiredValue;
-                                }
-                    }
-                }
+            List<Task> tasks = new List<Task>();
+            foreach (RoomModel room in eventArgs.Rooms)
+              tasks.Add( AddSignalRecords(room));
+            Task.WaitAll(tasks.ToArray());
+            dbContext.SaveChanges();
+            foreach (SignalRecord sr in dbContext.Signals)
+                Debug.WriteLine($"#{sr.Timestamp} Room: {sr.Room.Name}, Signal: {sr.Type.Name}, Value: {sr.Value} {sr.Type.UnitOfMeasure}");
+
+            Notify("History");
+
         }
 
         public IEnumerable<KeyValuePair<DateTime, float>> GetSignalHistory(string roomName, string signalName, DateTime from, DateTime to)
@@ -62,37 +44,48 @@ namespace SonsOfUncleBob.Database
                 .Select(s => new KeyValuePair<DateTime, float>(s.Timestamp, s.Value))
                 .OrderBy(pair => pair.Key);
         }
-
-        private async Task AddSignalRecord(string roomName, string signalName, string unitOfMeasure, DateTime timestamp, float signalValue)
+        private Random r = new Random();
+        private async Task AddSignalRecords(RoomModel updatedRoom)
         {
-            var roomTask = dbContext.Rooms.FirstOrDefaultAsync(r => r.Name == roomName);
-            var signaltypeTask = dbContext.SignalTypes.FirstOrDefaultAsync(s => s.Name == signalName && s.UnitOfMeasure == unitOfMeasure);
+            var roomTask = dbContext.Rooms.FirstOrDefaultAsync(r => r.Name == updatedRoom.Name);
+            DateTime timestamp = DateTime.Now;
 
-            var room = await roomTask;
-            if (room == null)
+            foreach (SignalModel updatedSignal in updatedRoom.Signals)
             {
-                room = new Database.Room(roomName);
-                await AddRoom(room);
-            }
 
-            var signaltype = await signaltypeTask;
-            if (signalName == null)
-            {
-                signaltype = new Database.SignalType(signalName, unitOfMeasure);
-                await AddSignalType(signaltype);
-            }
 
-            Database.SignalRecord signal = new(room, signaltype, timestamp, signalValue);
-            await dbContext.Signals.AddAsync(signal);
-            dbContext.SaveChanges();
+                var signaltypeTask = dbContext.SignalTypes.FirstOrDefaultAsync(s => s.Name == updatedSignal.Name && s.UnitOfMeasure == updatedSignal.UnitOfMeasure);
+
+                Task? addRoomTask = null, addSignalTypeTask = null;
+
+                var room = await roomTask;
+                if (room == null)
+                {
+                    room = new Room { Name = updatedRoom.Name };
+                    addRoomTask = AddRoom(room);
+                }
+
+                var signaltype = await signaltypeTask;
+                if (signaltype == null)
+                {
+                    signaltype = new SignalType {Name = updatedSignal.Name, UnitOfMeasure =  updatedSignal.UnitOfMeasure };
+                    addSignalTypeTask = AddSignalType(signaltype);
+                }
+
+                SignalRecord signal = new SignalRecord {Room = room, Type = signaltype, Timestamp = timestamp, Value = updatedSignal.CurrentValue };
+
+                if (addRoomTask != null) await addRoomTask;
+                if (addSignalTypeTask != null) await addSignalTypeTask;
+                await dbContext.Signals.AddAsync(signal);
+            }
         }
 
-        private async Task AddRoom(Database.Room room)
+        private async Task AddRoom(Room room)
         {
             await dbContext.Rooms.AddAsync(room);
         }
 
-        private async Task AddSignalType(Database.SignalType signaltype)
+        private async Task AddSignalType(SignalType signaltype)
         {
             await dbContext.SignalTypes.AddAsync(signaltype);
         }
