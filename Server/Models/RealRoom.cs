@@ -115,7 +115,7 @@ namespace Server.Models
 
         private bool IsTemperatureAndDesiredTemperatureEqual()
         {
-            return (Temperature <= (DesiredTemperature + 0.01) && Temperature >= (DesiredTemperature - 0.01));
+            return (Temperature <= (DesiredTemperature + RoomDefaults.temperatureChangeStep) && Temperature >= (DesiredTemperature - RoomDefaults.temperatureChangeStep));
         }
     }
 }
