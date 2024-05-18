@@ -10,7 +10,8 @@
              xmlns:viewModels="clr-namespace:SonsOfUncleBob.ViewModels">
 
     <ContentPage.Resources>
-        <Converters:LightOnOfftoBoolConverter x:Key ="LightOnOfftoBoolConverter"/>
+        <Converters:LightBoolToOnOffConverter x:Key ="LightBoolToOnOffConverter"/>
+        <Converters:LightBoolToColorConverter x:Key="LightBoolToColorConverter"/>
         <Converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
     </ContentPage.Resources>
 
@@ -53,13 +54,15 @@
                             </Grid.ColumnDefinitions>
 
                             <!--Kitchen-->
-                            <Label Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  BackgroundColor="Green" TextColor="White"
+                            <Label Text="{Binding Kitchen.Name}" Grid.Row="1" Grid.Column="1"  
+                                   BackgroundColor="{Binding Kitchen.Light, Converter={StaticResource LightBoolToColorConverter}}" 
+                                   TextColor="White" FontSize="Medium"
                                    HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
                                    HeightRequest="200" WidthRequest="350"/>
                             <VerticalStackLayout Grid.Row="1" Grid.Column="1"  Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="2">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding Kitchen.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding Kitchen.Light, Converter={StaticResource LightBoolToOnOffConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding Kitchen.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -67,13 +70,15 @@
                             </VerticalStackLayout>
 
                             <!--Bathroom-->
-                            <Label Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" BackgroundColor="DeepSkyBlue" TextColor="White"
+                            <Label Text="{Binding BathRoom.Name}" Grid.Row="1" Grid.Column="2" 
+                                   BackgroundColor="{Binding BathRoom.Light, Converter={StaticResource LightBoolToColorConverter}}" 
+                                   TextColor="White" FontSize="Medium"
                                    HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
                                    HeightRequest="200" WidthRequest="180" />
                             <VerticalStackLayout Grid.Row="1" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5" >
                                     <Label Text="Light: " FontSize="Default" TextColor="White" />
-                                    <Label Text="{Binding BathRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BathRoom.Light, Converter={StaticResource LightBoolToOnOffConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding BathRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -81,13 +86,15 @@
                             </VerticalStackLayout>
 
                             <!--Livingroom-->
-                            <Label Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" BackgroundColor="Teal" TextColor="White"
+                            <Label Text="{Binding LivingRoom.Name}" Grid.Row="2" Grid.Column="1" 
+                                   BackgroundColor="{Binding LivingRoom.Light, Converter={StaticResource LightBoolToColorConverter}}" 
+                                   TextColor="White" FontSize="Medium"
                                    HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
                                    HeightRequest="300" WidthRequest="350"/>
                             <VerticalStackLayout Grid.Row="2" Grid.Column="1" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding LivingRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding LivingRoom.Light, Converter={StaticResource LightBoolToOnOffConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding LivingRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -95,13 +102,15 @@
                             </VerticalStackLayout>
 
                             <!--Bedroom-->
-                            <Label Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2"  BackgroundColor="Purple" TextColor="White"
+                            <Label Text="{Binding BedRoom.Name}" Grid.Row="2" Grid.Column="2" 
+                                   BackgroundColor="{Binding BedRoom.Light, Converter={StaticResource LightBoolToColorConverter}}" 
+                                   TextColor="White" FontSize="Medium"
                                    HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" 
                                    HeightRequest="300" WidthRequest="180"/>
                             <VerticalStackLayout Grid.Row="2" Grid.Column="2" Padding="2" Spacing="5">
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="Light: " FontSize="Default" TextColor="White"/>
-                                    <Label Text="{Binding BedRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Default" TextColor="White"/>
+                                    <Label Text="{Binding BedRoom.Light, Converter={StaticResource LightBoolToOnOffConverter}}" FontSize="Default" TextColor="White"/>
                                 </HorizontalStackLayout>
                                 <HorizontalStackLayout Padding="2" Spacing="5">
                                     <Label Text="{Binding BedRoom.SignalSummary}" FontSize="Default" TextColor="White"/>
@@ -117,7 +126,8 @@
             <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
 
                 <VerticalStackLayout Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
-
+                    
+                    <!--Room Information-->
                     <VerticalStackLayout Spacing="30" BindingContext="{Binding InformationViewModel}" IsVisible="{Binding IsVisible}">
                         <Label Text="Room Information" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
@@ -127,10 +137,10 @@
 
                         <HorizontalStackLayout Spacing="50" HorizontalOptions="Center">
                             <Image Source="lamp.png" WidthRequest="60" HeightRequest="60" IsVisible="{Binding IsRoomSelected}"/>
-                            <Label Text="{Binding SelectedRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Medium" VerticalTextAlignment="Center"/>
+                            <Label Text="{Binding SelectedRoom.Light, Converter={StaticResource LightBoolToOnOffConverter}}" FontSize="Medium" VerticalTextAlignment="Center"/>
                             <AbsoluteLayout VerticalOptions="Center">
                                 <Switch IsToggled ="{Binding SelectedRoom.Light}" IsVisible="{Binding IsRoomSelected}" 
-                    HorizontalOptions="End" Scale="1.5"  AbsoluteLayout.LayoutBounds="60,0,40,35"/>
+                                HorizontalOptions="End" Scale="1.5"  AbsoluteLayout.LayoutBounds="60,0,40,35"/>
                             </AbsoluteLayout>
                         </HorizontalStackLayout>
 
@@ -141,15 +151,16 @@
                                         <Image Source="{Binding Icon.Source}" WidthRequest="60" HeightRequest="60"/>
                                         <Label Text="{Binding Name}" VerticalTextAlignment="Center" FontSize="Medium" />
                                         <Label Text="{Binding CurrentValueWithUnit}" VerticalTextAlignment="Center" FontSize="Medium"/>
-                                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
+                                        <Label Text="Desired value: " VerticalTextAlignment="Center" FontSize="Medium" />
+                                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Center" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
                                     </HorizontalStackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-
-
                     </VerticalStackLayout>
-                    <VerticalStackLayout Spacing="30" BindingContext="{Binding HistoryViewModel}" IsVisible="{Binding IsVisible}">
+
+                    <!--Data History-->
+                    <VerticalStackLayout Spacing="10" BindingContext="{Binding HistoryViewModel}" IsVisible="{Binding IsVisible}">
                         <Label Text="Data History" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
 
                         <Picker Title="Select a Room!" FontSize="Medium" Background="WhiteSmoke" TextColor="Black" 
