@@ -30,8 +30,6 @@ namespace SonsOfUncleBob.Database
               tasks.Add( AddSignalRecords(room));
             Task.WaitAll(tasks.ToArray());
             dbContext.SaveChanges();
-            foreach (SignalRecord sr in dbContext.Signals)
-                Debug.WriteLine($"#{sr.Timestamp} Room: {sr.Room.Name}, Signal: {sr.Type.Name}, Value: {sr.Value} {sr.Type.UnitOfMeasure}");
 
             Notify("History");
 

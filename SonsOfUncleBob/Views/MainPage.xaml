@@ -5,10 +5,13 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:drawable="clr-namespace:SonsOfUncleBob"
              xmlns:Views="clr-namespace:SonsOfUncleBob.Views"
-             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters">
+             xmlns:Converters="clr-namespace:SonsOfUncleBob.Converters"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             xmlns:viewModels="clr-namespace:SonsOfUncleBob.ViewModels">
 
     <ContentPage.Resources>
         <Converters:LightOnOfftoBoolConverter x:Key ="LightOnOfftoBoolConverter"/>
+        <Converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
     </ContentPage.Resources>
 
     <ScrollView MaximumHeightRequest="730">
@@ -30,7 +33,7 @@
                         </AbsoluteLayout>
                         <Label Text="Room Information" FontSize="Default" VerticalTextAlignment="Center" HorizontalOptions="End" Padding="10" />
                     </HorizontalStackLayout>
-                    
+
                     <!--Home layout-->
                     <StackLayout Margin="10" Background="Black" Spacing="10" Padding="2">
 
@@ -109,14 +112,85 @@
                     </StackLayout>
                 </StackLayout>
             </Border>
-            
+
             <!--Right side of the page, displaying either Room Information or Data History-->
             <Border Stroke="black" StrokeThickness="2" Padding="0" Margin="10" HorizontalOptions="Fill" >
 
                 <VerticalStackLayout Background="LightBlue" Spacing="10" Padding="10" WidthRequest="800">
 
-                    <Views:Information IsVisible="{Binding IsVisible}" BindingContext="{Binding InformationViewModel}"/>
-                    <Views:History IsVisible="{Binding IsVisible}" BindingContext="{Binding HistoryViewModel}"/>
+                    <VerticalStackLayout Spacing="30" BindingContext="{Binding InformationViewModel}" IsVisible="{Binding IsVisible}">
+                        <Label Text="Room Information" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+                        <Picker Title="Select a Room!" FontSize="Medium" Background="WhiteSmoke" TextColor="Black"  
+                                SelectedItem="{Binding SelectedRoom, Mode=TwoWay}" ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}">
+                        </Picker>
+
+                        <HorizontalStackLayout Spacing="50" HorizontalOptions="Center">
+                            <Image Source="lamp.png" WidthRequest="60" HeightRequest="60" IsVisible="{Binding IsRoomSelected}"/>
+                            <Label Text="{Binding SelectedRoom.Light, Converter={StaticResource LightOnOfftoBoolConverter}}" FontSize="Medium" VerticalTextAlignment="Center"/>
+                            <AbsoluteLayout VerticalOptions="Center">
+                                <Switch IsToggled ="{Binding SelectedRoom.Light}" IsVisible="{Binding IsRoomSelected}" 
+                    HorizontalOptions="End" Scale="1.5"  AbsoluteLayout.LayoutBounds="60,0,40,35"/>
+                            </AbsoluteLayout>
+                        </HorizontalStackLayout>
+
+                        <CollectionView ItemsSource="{Binding SelectedRoom.Signals}" >
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="viewModels:SignalViewModel">
+                                    <HorizontalStackLayout Spacing="50" VerticalOptions="Center" HorizontalOptions="Center" Padding="10">
+                                        <Image Source="{Binding Icon.Source}" WidthRequest="60" HeightRequest="60"/>
+                                        <Label Text="{Binding Name}" VerticalTextAlignment="Center" FontSize="Medium" />
+                                        <Label Text="{Binding CurrentValueWithUnit}" VerticalTextAlignment="Center" FontSize="Medium"/>
+                                        <Entry Text="{Binding DesiredValue, Mode=TwoWay}" Placeholder="Desired" VerticalOptions="Start" BackgroundColor="WhiteSmoke" TextColor="Black" Keyboard="Numeric" WidthRequest="70" HeightRequest="20" />
+                                    </HorizontalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="30" BindingContext="{Binding HistoryViewModel}" IsVisible="{Binding IsVisible}">
+                        <Label Text="Data History" FontSize="Header" FontAttributes ="Bold" HorizontalOptions="Center" />
+
+                        <Picker Title="Select a Room!" FontSize="Medium" Background="WhiteSmoke" TextColor="Black" 
+                             ItemsSource="{Binding RoomList}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedRoom, Mode=TwoWay}">
+                        </Picker>
+                        
+                        <Picker Title="Select a Signal!" FontSize="Medium" Background="WhiteSmoke" TextColor="Black"  IsEnabled="{Binding Signals, Converter={StaticResource IsNotNullConverter}}"
+                             ItemsSource="{Binding Signals}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedSignal, Mode=TwoWay}">
+                        </Picker>
+
+                        <Picker Title="Select an Interval!" FontSize="Medium" Background="WhiteSmoke" TextColor="Black" 
+                             ItemsSource="{Binding Intervals}" ItemDisplayBinding="{Binding Key}" SelectedItem="{Binding SelectedInterval, Mode=TwoWay}">
+                        </Picker>
+
+                        <chart:SfCartesianChart x:Name="chartView" Title="{Binding SelectedSignal.Name}">
+
+                            <chart:SfCartesianChart.XAxes>
+                                <chart:DateTimeAxis>
+                                    <chart:DateTimeAxis.Title>
+                                        <chart:ChartAxisTitle Text="Time" />
+                                    </chart:DateTimeAxis.Title>
+                                </chart:DateTimeAxis>
+                            </chart:SfCartesianChart.XAxes>
+
+                            <chart:SfCartesianChart.YAxes>
+                                <chart:NumericalAxis>
+                                    <chart:NumericalAxis.Title>
+                                        <chart:ChartAxisTitle Text="{Binding SelectedSignal.Name}"/>
+                                    </chart:NumericalAxis.Title>
+                                </chart:NumericalAxis>
+                            </chart:SfCartesianChart.YAxes>
+                            <chart:SfCartesianChart.Series>
+                                <chart:LineSeries XBindingPath="Key"
+				                    ItemsSource="{Binding ChartData}"
+				                    YBindingPath="Value"/>
+                            </chart:SfCartesianChart.Series>
+                        </chart:SfCartesianChart>
+
+
+                    </VerticalStackLayout>
+
 
                 </VerticalStackLayout>
             </Border>

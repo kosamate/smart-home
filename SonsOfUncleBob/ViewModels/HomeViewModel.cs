@@ -58,7 +58,7 @@ namespace SonsOfUncleBob.ViewModels
         public RoomViewModel BedRoom { get => Rooms.Where(r => r.Name == "Bedroom").First(); }
         public RoomViewModel BathRoom { get => Rooms.Where(r => r.Name == "Bathroom").First(); }
 
-        public void ViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Notify(e.PropertyName);
         }

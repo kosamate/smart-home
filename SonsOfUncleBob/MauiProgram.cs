@@ -3,6 +3,7 @@ using SonsOfUncleBob.ViewModels;
 using Microcharts.Maui;
 using SonsOfUncleBob.Models;
 using SonsOfUncleBob.Database;
+using Syncfusion.Maui.Core.Hosting;
 using SonsOfUncleBob.Http;
 
 namespace SonsOfUncleBob
@@ -21,7 +22,7 @@ namespace SonsOfUncleBob
                 });
 
             builder.UseMicrocharts();
-
+            builder.ConfigureSyncfusionCore();
             builder.AddModels();
             builder.AddViewModels();
             builder.AddView();
