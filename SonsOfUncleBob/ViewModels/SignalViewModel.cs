@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Defaults;
 using SonsOfUncleBob.Models;
 
 namespace SonsOfUncleBob.ViewModels
@@ -25,7 +26,7 @@ namespace SonsOfUncleBob.ViewModels
         }
 
         public string Name { get => signal.Name;}
-        public string DesiredValueWithUnit { get => $"{signal.DesiredValue} {signal.UnitOfMeasure}"; }
+        public string DesiredValueWithUnit { get => $"{signal.DesiredValue:0.00} {signal.UnitOfMeasure}"; }
 
         public float? DesiredValue {
             get => (signal.DesiredValue == null) ? float.NaN : (float)signal.DesiredValue;
@@ -46,6 +47,67 @@ namespace SonsOfUncleBob.ViewModels
         public string CurrentValueWithUnit { get => $"{signal.CurrentValue:0.00} {signal.UnitOfMeasure}"; }
 
         public Image Icon { get => icons[signal.Category]; }
+
+        private float requestedDesiredValue = float.NaN;
+        public float RequestedDesiredValue
+        {
+            get => requestedDesiredValue;
+            set
+            {
+                requestedDesiredValue = value;
+                if (value != float.NaN)
+                {
+                    if ((value < MinimumValue) || (value > MaximumValue))
+                        IsDesiredOutOfRange = true;
+                    else
+                    {
+                        IsDesiredOutOfRange = false;
+                        DesiredValue = value;
+                    }
+                }
+            }
+        }
+
+        private bool isDesiredOutOfRange = false;
+        public bool IsDesiredOutOfRange
+        {
+            get => isDesiredOutOfRange;
+            set
+            {
+                isDesiredOutOfRange = value;
+                Notify();
+            }
+        }
+       
+
+        public string DesiredValueOutOfRangeText { get => $"The requested value is out of range! Minimum: {MinimumValue:0.00}, maximum: {MaximumValue:0.00}."; }
+
+        public float MinimumValue
+        {
+            get
+            {
+                if (signal.Category == SignalModel.SignalCategory.Temperature)
+                    return (float)RoomDefaults.temperatureMin;
+                if (signal.Category == SignalModel.SignalCategory.Humidity)
+                    return (float)BathroomDefaults.humidityMin;
+                else
+                    return (float)0.0;
+            }
+        }
+
+        public float MaximumValue
+        {
+            get
+            {
+                if (signal.Category == SignalModel.SignalCategory.Temperature)
+                    return (float)RoomDefaults.temperatureMax;
+                if (signal.Category == SignalModel.SignalCategory.Humidity)
+                    return (float)BathroomDefaults.humidityMax;
+                else
+                    return (float)100.0;
+            }
+        }
+
 
         public void ModelChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
