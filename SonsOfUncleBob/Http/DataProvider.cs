@@ -125,39 +125,78 @@ namespace SonsOfUncleBob.Http
 
         private void UpdateRoomsValues(List<RoomDTO> roomDTOList)
         {
-            foreach (RoomModel room in rooms)
-                foreach (RoomDTO roomDTO in roomDTOList)
-                    if (room.Name == roomDTO.Name)
-                    {
-                        room.Light = roomDTO.Light;
-                        foreach (SignalModel signal in room.Signals)
+            if (roomDTOList != null)
+            {
+                foreach (RoomModel room in rooms)
+                    foreach (RoomDTO roomDTO in roomDTOList)
+                        if (room.Name == roomDTO.Name)
                         {
-                            signal.CurrentValue = (float)roomDTO.Temperature;
-                            signal.DesiredValue = (float)roomDTO.DesiredTemperature;
+                            room.Light = roomDTO.Light;
+                            foreach (SignalModel signal in room.Signals)
+                            {
+                                signal.CurrentValue = (float)roomDTO.Temperature;
+                                signal.DesiredValue = (float)roomDTO.DesiredTemperature;
+                            }
                         }
+            }
+            else
+            {
+                foreach (RoomModel room in rooms)
+                {
+                    room.Light = false;
+                    foreach (SignalModel signal in room.Signals)
+                    {
+                        signal.CurrentValue = float.NaN;
+                        signal.DesiredValue = float.NaN;
                     }
+                }
+            }
         }
 
         private void UpdateBathroomValues(BathroomDTO bathroomDTO)
         {
-            foreach (RoomModel room in rooms)
-                if (room.Name == bathroomDTO.Name)
-                {
-                    room.Light = bathroomDTO.Light;
-                    foreach (SignalModel signal in room.Signals)
+            if (bathroomDTO != null)
+            {
+                foreach (RoomModel room in rooms)
+                    if (room.Name == bathroomDTO.Name)
                     {
-                        if (signal.Category == SignalModel.SignalCategory.Temperature)
+                        room.Light = bathroomDTO.Light;
+                        foreach (SignalModel signal in room.Signals)
                         {
-                            signal.CurrentValue = (float)bathroomDTO.Temperature;
-                            signal.DesiredValue = (float)bathroomDTO.DesiredTemperature;
-                        }
-                        if (signal.Category == SignalModel.SignalCategory.Humidity)
-                        {
-                            signal.CurrentValue = (float)bathroomDTO.Humidity;
-                            signal.DesiredValue = (float)bathroomDTO.DesiredHumidity;
+                            if (signal.Category == SignalModel.SignalCategory.Temperature)
+                            {
+                                signal.CurrentValue = (float)bathroomDTO.Temperature;
+                                signal.DesiredValue = (float)bathroomDTO.DesiredTemperature;
+                            }
+                            if (signal.Category == SignalModel.SignalCategory.Humidity)
+                            {
+                                signal.CurrentValue = (float)bathroomDTO.Humidity;
+                                signal.DesiredValue = (float)bathroomDTO.DesiredHumidity;
+                            }
                         }
                     }
-                }
+            }
+            else
+            {
+                foreach (RoomModel room in rooms)
+                    if (room.Name == "Bathroom")
+                    {
+                        room.Light = false;
+                        foreach (SignalModel signal in room.Signals)
+                        {
+                            if (signal.Category == SignalModel.SignalCategory.Temperature)
+                            {
+                                signal.CurrentValue = float.NaN;
+                                signal.DesiredValue = float.NaN;
+                            }
+                            if (signal.Category == SignalModel.SignalCategory.Humidity)
+                            {
+                                signal.CurrentValue = float.NaN;
+                                signal.DesiredValue = float.NaN;
+                            }
+                        }
+                    }
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ namespace SonsOfUncleBob.ViewModels
         public string DesiredValueWithUnit { get => $"{signal.DesiredValue} {signal.UnitOfMeasure}"; }
 
         public float? DesiredValue {
-            get => (signal.DesiredValue == null) ? (float)0.0 : (float)signal.DesiredValue;
+            get => (signal.DesiredValue == null) ? float.NaN : (float)signal.DesiredValue;
             set
             {
                 signal.DesiredValue = value;
