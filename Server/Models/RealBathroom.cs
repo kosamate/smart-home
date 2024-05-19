@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Server.Models.Supporters;
+﻿using Server.Models.Supporter;
+using Common.Defaults;
 
 namespace Server.Models
 {
@@ -40,21 +36,21 @@ namespace Server.Models
                 this.HumidityTimeConstant = humidityTimeConstant;
         }
 
-        public override void updateMeasuredValues()
+        public override void UpdateMeasuredValues()
         {
-            base.updateMeasuredValues();
+            base.UpdateMeasuredValues();
 
             if (Humidity <= (DesiredHumidity + BathroomDefaults.humidityInsensitivity))
             {
-                updateHumidityWithoutDehumidifier();
+                UpdateHumidityWithoutDehumidifier();
                 return;
             }
 
-            double difference = Helper.calculateDifference(Humidity, DesiredHumidity, LastAdjusted, HumidityTimeConstant);
+            double difference = Helper.CalculateDifference(Humidity, DesiredHumidity, LastAdjusted, HumidityTimeConstant);
             Humidity += difference;
         }
 
-        public void updateDesiredHumidity(double humidity)
+        public void UpdateDesiredHumidity(double humidity)
         {
             LastAdjusted = TimeOnly.FromDateTime(DateTime.Now);
             if (humidity < BathroomDefaults.humidityMin)
@@ -73,7 +69,7 @@ namespace Server.Models
             return answer;
         }
 
-        private void updateHumidityWithoutDehumidifier()
+        private void UpdateHumidityWithoutDehumidifier()
         {
             Humidity += BathroomDefaults.humidityChangeStep;
             return;

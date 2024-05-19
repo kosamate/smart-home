@@ -12,7 +12,7 @@ namespace SonsOfUncleBob.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void Notify([CallerMemberName] string propertyName = "")
+        protected virtual void Notify([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

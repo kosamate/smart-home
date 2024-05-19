@@ -4,31 +4,72 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SonsOfUncleBob.Models;
+using System.Diagnostics;
+using SonsOfUncleBob.Models.EventArguments;
 
 namespace SonsOfUncleBob.ViewModels
 {
-    public class RoomViewModel
+    public class RoomViewModel : ObservableObject
     {
-        private Room room;
-        private List<HomeSignalViewModel> signals = new List<HomeSignalViewModel>();
+        public RoomViewModel(RoomModel room)
+        {
+            this.room = room;
+            foreach (SignalModel signal in room.Signals)
+                signals.Add(new SignalViewModel(signal));
+                
+            foreach (SignalViewModel signalViewModels in signals)
+                signalViewModels.PropertyChanged += ModelOrSignalViewModelsChanged;
+
+            room.PropertyChanged += ModelOrSignalViewModelsChanged;
+        }
+
+        internal static event EventHandler<RoomEventArgs> NewDesiredValues;
+
+        private RoomModel room;
+        private List<SignalViewModel> signals = new List<SignalViewModel>();
         public string Name { get => room.Name; }
-        public string Light { get => room.Light ? "On" : "Off"; }
+        public bool Light 
+        { 
+            get => room.Light; 
+            set 
+            {  
+                room.Light = value;
+                //Updating it in the server aswell.
+                if (this.Signals[0].DesiredValue != null)
+                {
+                    RoomEventArgs eventArgs = new RoomEventArgs();
+                    eventArgs.Room = this.room;
+                    NewDesiredValues?.Invoke(this, eventArgs);
+                }
+            } 
+        }
         public string SignalSummary
         {
             get {
                 string summary = "";
-                foreach (HomeSignal signal in room.Signals)
-                    summary += $"{signal.Name}: {signal.Values.Peek()} {signal.UnitOfMeasure}\n";
+                foreach (SignalViewModel signal in signals)
+                    summary += $"{signal.Name}: {signal.CurrentValueWithUnit}\n";
                 return summary;
             }
         }
-        public IEnumerable<HomeSignalViewModel> Signals { get => signals; }
+        public List<SignalViewModel> Signals { get => signals; }
 
-        public RoomViewModel(Room room)
+        public void ModelOrSignalViewModelsChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            this.room = room;
-            foreach (HomeSignal signal in room.Signals)
-                signals.Add(new HomeSignalViewModel(signal));
+            Notify(e.PropertyName);
+            if (e.PropertyName != nameof(Light))
+                Notify(nameof(SignalSummary));
+
+            //If the desired value changed, it is needed to be updated in the server aswell.
+            if(e.PropertyName == "DesiredValue")
+            {
+                if (this.Signals[0].DesiredValue != null)
+                {
+                    RoomEventArgs eventArgs = new RoomEventArgs();
+                    eventArgs.Room = this.room;
+                    NewDesiredValues?.Invoke(this, eventArgs);
+                }
+            }
         }
     }
 }

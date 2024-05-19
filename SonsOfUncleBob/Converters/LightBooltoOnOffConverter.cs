@@ -7,17 +7,27 @@ using System.Threading.Tasks;
 
 namespace SonsOfUncleBob.Converters
 {
-    public class NegateConverter : IValueConverter
+    class LightBoolToOnOffConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool b = (bool)value;
-            return !b;
+            string s = "";
+
+            if ((bool)value == true)
+            {
+                s = "On";
+            }
+            else if ((bool)value == false)
+            {
+                s = "Off";
+            }
+
+            return s;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return Convert(value, targetType, parameter, culture);
+            throw new NotImplementedException();
         }
     }
 }

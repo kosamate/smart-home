@@ -1,10 +1,6 @@
-﻿using Server.Http.DTO;
-using Server.Http.Listener;
-using Server.Models;
-using Server.Models.Supporters;
-using System.Text.Json;
+﻿using Server.Http.Listener;
 
-namespace HttpExample.Server
+namespace Server
 {
     class Program
     {

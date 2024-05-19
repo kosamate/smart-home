@@ -1,10 +1,6 @@
 ﻿using Server.Http.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Server.Models.Supporters;
+using Common.DTO;
+using Common.Defaults;
 
 namespace Server.Models
 {
@@ -17,9 +13,9 @@ namespace Server.Models
             this.Rooms = new List<RealRoom>();
             foreach (string roomName in new string[] { "Kitchen", "Living Room", "Bedroom" })
             {
-                this.Rooms.Add(new RealRoom(roomName, 24.0, LightState.Off, RoomDefaults.defaultDesiredTemperature, 5.0));
+                this.Rooms.Add(new RealRoom(roomName, RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultLightState, RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultThermalTimeConstant));
             }
-            this.Rooms.Add(new RealBathroom("Bathroom", 24.0, LightState.Off, 70.0, RoomDefaults.defaultDesiredTemperature, 5.0, BathroomDefaults.defaultDesiredHumidity, 5.0));
+            this.Rooms.Add(new RealBathroom("Bathroom", RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultLightState, 70.0, RoomDefaults.defaultDesiredTemperature, RoomDefaults.defaultThermalTimeConstant, BathroomDefaults.defaultDesiredHumidity, BathroomDefaults.defaultHumidityTimeConstant));
         }
 
         public void updateDesiredValues(HouseDTO houseDTO)
@@ -28,10 +24,10 @@ namespace Server.Models
                 foreach (RoomDTO roomDTO in houseDTO.Rooms)
                     if (room.Name == roomDTO.Name)
                     {
-                        room.updateDesiredTemperature(roomDTO.DesiredTemperature);
+                        room.UpdateDesiredTemperature(roomDTO.DesiredTemperature);
                         room.Light = roomDTO.Light;
                         if (roomDTO is BathroomDTO)
-                            ((RealBathroom)room).updateDesiredHumidity(((BathroomDTO)roomDTO).DesiredHumidity);
+                            ((RealBathroom)room).UpdateDesiredHumidity(((BathroomDTO)roomDTO).DesiredHumidity);
                     }
         }
 
