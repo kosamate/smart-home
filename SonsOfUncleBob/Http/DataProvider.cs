@@ -11,7 +11,6 @@ namespace SonsOfUncleBob.Http
         private static DataProvider instance = null;
         private static readonly object padlock = new object();
 
-        //public static event NewMeasuredValuesDelegate NewMeasuredValues;
         public static event EventHandler<RoomListEventArgs> NewMeasuredValues;
 
         private Client client = new();
