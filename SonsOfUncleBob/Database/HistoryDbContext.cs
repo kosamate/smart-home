@@ -24,7 +24,7 @@ namespace SonsOfUncleBob.Database
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseInMemoryDatabase("history"); //.UseSqlite($"Data Source={DbPath}");
+            => options.UseInMemoryDatabase("history");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
