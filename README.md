@@ -95,8 +95,8 @@ Technológiák
 
 Módszertani szempontok
 - [x] mintánként 5p (15p): A tárgy keretében szereplő tervezési minta használata saját megvalósításban (videóban: forráskódban megmutatva). (Observer csak akkor, ha az esemény kiváltása is saját kód, pl. egy nyomógomb Click eseménykezelőjének megírása még nem elég ehhez.) A videóban minden tervezési mintára térjetek ki, hogy hol van, vagy írjátok le ide, hogy melyik és melyik fájlban található:
-  - Singletone - DataPovider.cs
-  - Observer - DataPovider.cs (Publisher), HistoryModel.cs (Subcriber), BarcelonaHomeModel.cs (Subcriber)
+  - Singletone - DataProvider.cs
+  - Observer - DataProvider.cs (Publisher), HistoryModel.cs (Subcriber), BarcelonaHomeModel.cs (Subcriber)
   - Builder - RoomModel.cs
 - [ ] 10p: Legalább 20% unit teszt lefedettség (Videóban: unit tesztek lefutnak és zöldek, coverage report 20% feletti számot mutat). Ha kisebb a lefedettség, arányosan kevesebb pontot ér. (UWP alkalmazásra macerás tesztet írni, a tesztelendő osztályokat egy .NET Standard 2.0 projektbe hozzátok létre és azt tudjátok hivatkozni xUnit Test projektből, ha a teszt projekt .NET Core 2.0-át céloz meg.)
 - [ ] 10p: DocFX segítségével, XML kommentárokkal generált dokumentáció legalább 3 áttekintő UML diagrammal. A dokumentáció fejlesztői dokumentáció. Olyan mértékben kell, hogy tartalmazza a rendszer működését, hogy abból kiderüljön, hogy egy adott funkció hogy működik és hol található a forráskódban. A repository értelemszerűen tartalmazza a dokumentáció minden forrását is. A DocFX által generált HTML dokumentáció ZIP-elve a github.com release funkciójával letölthető formában kell, hogy elérhető legyen a leadáskor. A generált dokumentációt semmiképp ne commitoljátok be a repositoryba! https://github.com/blog/1547-release-your-software 
