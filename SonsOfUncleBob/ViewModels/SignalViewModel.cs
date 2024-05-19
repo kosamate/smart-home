@@ -49,20 +49,20 @@ namespace SonsOfUncleBob.ViewModels
         public Image Icon { get => icons[signal.Category]; }
 
         private float requestedDesiredValue = float.NaN;
-        public float RequestedDesiredValue
+        public string RequestedDesiredValue
         {
-            get => requestedDesiredValue;
+            get => requestedDesiredValue.ToString();
             set
             {
-                requestedDesiredValue = value;
-                if (value != float.NaN)
+                bool validValue = float.TryParse(value, out requestedDesiredValue);
+                if (validValue && requestedDesiredValue != float.NaN)
                 {
-                    if ((value < MinimumValue) || (value > MaximumValue))
+                    if ((requestedDesiredValue < MinimumValue) || (requestedDesiredValue > MaximumValue))
                         IsDesiredOutOfRange = true;
                     else
                     {
                         IsDesiredOutOfRange = false;
-                        DesiredValue = value;
+                        DesiredValue = requestedDesiredValue;
                     }
                 }
             }
