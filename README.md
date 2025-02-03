@@ -5,8 +5,7 @@ The project is a MAUI application containing some advanced technologies.
 ### Authors
 - Kósa György Máté
 - Trombitás Zalán
-- Langer Ákos
-
+- Langer Ákos  
 
 ### Techniques
 - MVVM architecture
@@ -25,3 +24,13 @@ The project is a MAUI application containing some advanced technologies.
   - Observer - DataProvider.cs (Publisher), HistoryModel.cs (Subcriber), BarcelonaHomeModel.cs (Subcriber)
   - Builder - RoomModel.cs
 - Dependency Injection framework
+
+## Appearance
+
+History screen
+
+![history screen](assets/history.png)
+
+Rooms details
+
+![room details screen](assets/room.png)
